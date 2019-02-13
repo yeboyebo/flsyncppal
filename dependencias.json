@@ -3,7 +3,7 @@
     "dependencias": [
         {
             "version": "v1.0",
-            "key": "baseparche"
+            "key": "celery"
         }
     ],
     "fun_aq": null

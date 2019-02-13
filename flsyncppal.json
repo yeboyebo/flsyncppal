@@ -19,6 +19,19 @@
             }
         ],
         "deleteFile": [],
-        "addFile": []
+        "addFile": [
+            {
+                "name": "model_flsyncppal__flsyncppal_def.py",
+                "path": "models/flsyncppal/"
+            },
+            {
+                "name": "app_sync____init__.py",
+                "path": "apps/sync/"
+            },
+            {
+                "name": "app_sync__tasks.py",
+                "path": "apps/sync/"
+            }
+        ]
     }
 }
