@@ -27,10 +27,6 @@
             {
                 "name": "app_sync____init__.py",
                 "path": "apps/sync/"
-            },
-            {
-                "name": "app_sync__tasks.py",
-                "path": "apps/sync/"
             }
         ]
     }
