@@ -27,6 +27,10 @@
             {
                 "name": "app_sync____init__.py",
                 "path": "apps/sync/"
+            },
+            {
+                "path": "apps/sync/viewset/",
+                "name": "app_sync__views_sync.py"
             }
         ]
     }
