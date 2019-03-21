@@ -31,6 +31,22 @@
             {
                 "path": "apps/sync/viewset/",
                 "name": "app_sync__views_sync.py"
+            },
+            {
+                "name": "controller_api_base__aqsync_download.py",
+                "path": "controllers/api/sync/base/"
+            },
+            {
+                "name": "controller_api_base__aqsync.py",
+                "path": "controllers/api/sync/base/"
+            },
+            {
+                "name": "controller_api_base__aqsync_upload.py",
+                "path": "controllers/api/sync/base/"
+            },
+            {
+                "name": "model_flsyncppal__aqsync_raw.py",
+                "path": "models/flsyncppal/objects/"
             }
         ]
     }
