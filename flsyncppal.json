@@ -45,7 +45,7 @@
                 "path": "controllers/api/sync/base/"
             },
             {
-                "name": "model_flsyncppal__aqsync_raw.py",
+                "name": "model_flsyncppal__aqmodel_raw.py",
                 "path": "models/flsyncppal/objects/"
             }
         ]

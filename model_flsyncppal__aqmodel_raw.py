@@ -4,7 +4,7 @@ from YBLEGACY import qsatype
 from YBUTILS.viewREST import cacheController
 
 
-class AQSync(ABC):
+class AQModel(ABC):
 
     table = None
     init_data = None

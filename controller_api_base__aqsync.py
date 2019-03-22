@@ -39,7 +39,7 @@ class AQSync(ABC):
         self.start_time = now[-(8):]
 
     @transaction.atomic
-    def execute(self):
+    def start(self):
         try:
             if not self.before_sync():
                 self.log("Éxito", "No es momento de sincronizar")
