@@ -47,6 +47,10 @@
             {
                 "name": "model_flsyncppal__aqmodel_raw.py",
                 "path": "models/flsyncppal/objects/"
+            },
+            {
+                "name": "controller_api_base__aqserializer.py",
+                "path": "controllers/api/sync/base/serializers/"
             }
         ]
     }

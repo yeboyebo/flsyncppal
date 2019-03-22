@@ -18,13 +18,15 @@ class AQSyncDownload(AQSync, ABC):
 
     def sync(self):
         response_data = self.send_request("get")
-        self.process_all_data(response_data)
+        if not self.process_all_data(response_data):
+            return self.large_sleep
+
         return self.after_sync()
 
     def process_all_data(self, all_data):
         if all_data == []:
             self.log("Éxito", "No hay datos que sincronizar")
-            return self.large_sleep
+            return False
 
         for data in all_data:
             try:
@@ -33,6 +35,8 @@ class AQSyncDownload(AQSync, ABC):
             except Exception as e:
                 self.error_data.append(data)
                 self.sync_error(data, e)
+
+        return True
 
     @abstractmethod
     def process_data(self, data):

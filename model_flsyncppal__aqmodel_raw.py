@@ -1,13 +1,13 @@
-from abc import ABC, abstractmethod
-
 from YBLEGACY import qsatype
+
+from abc import ABC
+
 from YBUTILS.viewREST import cacheController
 
 
 class AQModel(ABC):
 
     table = None
-    init_data = None
     data = None
     cursor = None
     children = None
@@ -15,22 +15,15 @@ class AQModel(ABC):
     params = None
     skip_record = None
 
-    def __init__(self, table, init_data, params=None):
+    def __init__(self, table, data, params=None):
         self.table = table
-        self.init_data = init_data
-        self.data = {}
+        self.data = data
         self.children = []
         self.params = params
-        self.skip_record = False
-
-        self.get_data()
+        self.skip_record = not data
 
         if not self.skip_record:
             self.get_children_data()
-
-    @abstractmethod
-    def get_data(self):
-        pass
 
     def get_cursor(self):
         cursor = qsatype.FLSqlCursor(self.table)
@@ -46,6 +39,8 @@ class AQModel(ABC):
             self.cursor = self.get_cursor()
 
         for key, value in self.data.items():
+            if key == "children":
+                continue
             self.cursor.setValueBuffer(key, value)
 
     def save(self):
@@ -65,16 +60,11 @@ class AQModel(ABC):
             child.get_parent_data(self.cursor)
             child.save()
 
-    def get_init_value(self, init_key):
-        value = self.init_data
+    def get_children_data(self):
+        return
 
-        init_keys = init_key.split("//")
-        for key in init_keys:
-            if key not in value.keys():
-                return None
-            value = value[key]
-
-        return value
+    def get_parent_data(self, cursor):
+        return
 
     def set_data_value(self, data_key, value):
         self.data[data_key] = value
@@ -85,22 +75,6 @@ class AQModel(ABC):
             return
 
         self.set_data_value(data_key, self.format_string(value, max_characters=max_characters))
-
-    def set_data_relation(self, data_key, init_key, default=None):
-        value = self.get_init_value(init_key)
-
-        if value is None and default is not None:
-            value = default
-
-        self.set_data_value(data_key, value)
-
-    def set_string_relation(self, data_key, init_key, max_characters=255, default=None):
-        value = self.get_init_value(init_key)
-
-        if (value is None or value == "") and default is not None:
-            value = default
-
-        self.set_string_value(data_key, value, max_characters=max_characters)
 
     def format_string(self, string, max_characters=255):
         if string is None or not string or string == "":
@@ -117,9 +91,3 @@ class AQModel(ABC):
         string = string.replace("\t", " ")
 
         return string[:max_characters]
-
-    def get_children_data(self):
-        return
-
-    def get_parent_data(self, cursor):
-        return
