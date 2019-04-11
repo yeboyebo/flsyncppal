@@ -65,20 +65,7 @@ class AQSync(ABC):
             setattr(self.driver, prop, params[prop])
 
     def send_request(self, request_type, data=None, replace=[]):
-        url = self.get_url(replace)
-
-        return self.driver.send_request(request_type, url, data=data)
-
-    def get_url(self, replace=[]):
-        url = self.url if qsatype.FLUtil.isInProd() else self.test_url
-
-        if replace:
-            url = url.format(*replace)
-
-        if not url or url == "":
-            raise NameError("La url no se indicó o no se hizo correctamente")
-
-        return url
+        return self.driver.send_request(request_type, data=data, replace=replace)
 
     def log(self, msg_type, msg):
         qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
