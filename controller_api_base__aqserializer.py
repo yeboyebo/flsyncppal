@@ -11,7 +11,8 @@ class AQSerializer(ABC):
         self.data = {
             "children": {}
         }
-        self.get_data()
+        if not self.get_data():
+            return False
 
         return self.data
 
