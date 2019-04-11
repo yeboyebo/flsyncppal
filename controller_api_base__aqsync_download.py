@@ -8,8 +8,8 @@ class AQSyncDownload(AQSync, ABC):
     success_data = None
     error_data = None
 
-    def __init__(self, process_name, params=None):
-        super().__init__(process_name, params)
+    def __init__(self, process_name, driver, params=None):
+        super().__init__(process_name, driver, params)
 
         self.success_data = []
         self.error_data = []

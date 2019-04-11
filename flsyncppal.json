@@ -51,6 +51,22 @@
             {
                 "name": "controller_api_base__aqserializer.py",
                 "path": "controllers/api/sync/base/serializers/"
+            },
+            {
+                "path": "controllers/api/sync/base/",
+                "name": "controller_api_base__task_manager.py"
+            },
+            {
+                "path": "controllers/api/sync/base/drivers/",
+                "name": "controller_api_base__magento_driver.py"
+            },
+            {
+                "path": "controllers/api/sync/base/drivers/",
+                "name": "controller_api_base__drupal_driver.py"
+            },
+            {
+                "path": "controllers/api/sync/base/drivers/",
+                "name": "controller_api_base__default_driver.py"
             }
         ]
     }
