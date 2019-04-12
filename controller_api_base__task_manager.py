@@ -71,33 +71,36 @@ class TaskManager():
         scheduled = i.scheduled()
         reserved = i.reserved()
 
-        aActive = {}
+        active_process = {}
         for w in active:
             for t in active[w]:
-                aActive[t['id']] = {}
-                aActive[t['id']]['worker'] = w
-                aActive[t['id']]['id'] = t['id']
-                aActive[t['id']]['name'] = t['name']
-                aActive[t['id']]['args'] = t['args']
-        aScheduled = {}
+                active_process[t["id"]] = {}
+                active_process[t["id"]]["worker"] = w
+                active_process[t["id"]]["id"] = t["id"]
+                active_process[t["id"]]["pk"] = t["id"]
+                active_process[t["id"]]["name"] = t["name"]
+                active_process[t["id"]]["args"] = t["args"]
+        scheduled_process = {}
         for w in scheduled:
             for t in scheduled[w]:
-                aScheduled[t['request']['id']] = {}
-                aScheduled[t['request']['id']]['worker'] = w
-                aScheduled[t['request']['id']]['eta'] = t['eta'][:19]
-                aScheduled[t['request']['id']]['id'] = t['request']['id']
-                aScheduled[t['request']['id']]['name'] = t['request']['name']
-                aScheduled[t['request']['id']]['args'] = t['request']['args']
-        aReserved = {}
+                scheduled_process[t["request"]["id"]] = {}
+                scheduled_process[t["request"]["id"]]["worker"] = w
+                scheduled_process[t["request"]["id"]]["eta"] = t["eta"][:19]
+                scheduled_process[t["request"]["id"]]["id"] = t["request"]["id"]
+                scheduled_process[t["request"]["id"]]["pk"] = t["request"]["id"]
+                scheduled_process[t["request"]["id"]]["name"] = t["request"]["name"]
+                scheduled_process[t["request"]["id"]]["args"] = t["request"]["args"]
+        reserved_process = {}
         for w in reserved:
             for t in reserved[w]:
-                aReserved[t['id']] = {}
-                aReserved[t['id']]['worker'] = w
-                aReserved[t['id']]['id'] = t['id']
-                aReserved[t['id']]['name'] = t['name']
-                aReserved[t['id']]['args'] = t['args']
+                reserved_process[t["id"]] = {}
+                reserved_process[t["id"]]["worker"] = w
+                reserved_process[t["id"]]["id"] = t["id"]
+                reserved_process[t["id"]]["pk"] = t["id"]
+                reserved_process[t["id"]]["name"] = t["name"]
+                reserved_process[t["id"]]["args"] = t["args"]
 
-        return {'active': aActive, 'scheduled': aScheduled, 'reserved': aReserved}
+        return {"active": active_process, "scheduled": scheduled_process, "reserved": reserved_process}
 
     def revoke(self, id):
         app.control.revoke(id, terminate=True)
