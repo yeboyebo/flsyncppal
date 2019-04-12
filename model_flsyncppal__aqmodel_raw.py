@@ -57,6 +57,9 @@ class AQModel(ABC):
             raise NameError("No se pudo guardar el registro {} de la tabla {}. {}".format(self.data[pk_name], self.table, error))
 
         for child in self.children:
+            if child.skip_record:
+                continue
+
             child.get_parent_data(self.cursor)
             child.save()
 
