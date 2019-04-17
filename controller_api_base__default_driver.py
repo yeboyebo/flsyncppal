@@ -8,12 +8,16 @@ class DefaultDriver(ABC):
 
     session = None
 
+    success_code = None
     url = None
     test_url = None
     auth = None
     test_auth = None
 
-    def send_request(self, request_type, url=None, data=None, replace=[]):
+    def __init__(self):
+        self.success_code = 200
+
+    def send_request(self, request_type, url=None, data=None, replace=[], success_code=None):
         url = url if url else self.get_url(replace)
         headers = self.get_headers()
 
@@ -30,7 +34,10 @@ class DefaultDriver(ABC):
         else:
             raise NameError("No se encuentra el tipo de petición {}".format(request_type))
 
-        return self.proccess_response(response)
+        if not success_code:
+            success_code = self.success_code
+
+        return self.proccess_response(response, success_code)
 
     def get_url(self, replace=[]):
         url = self.url if qsatype.FLUtil.isInProd() else self.test_url
@@ -43,8 +50,8 @@ class DefaultDriver(ABC):
 
         return url
 
-    def proccess_response(self, response):
-        if response.status_code == requests.codes.ok:
+    def proccess_response(self, response, success_code):
+        if response.status_code == success_code:
             try:
                 return response.json()
             except Exception as e:

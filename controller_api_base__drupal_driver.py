@@ -42,7 +42,7 @@ class DrupalDriver(DefaultDriver):
             "password": password
         }
 
-        response = self.send_request("post", url, data=json.dumps(body))
+        response = self.send_request("post", url, data=json.dumps(body), success_code=200)
         if response:
             self.session_name = response["session_name"]
             self.session_id = response["sessid"]
@@ -53,6 +53,6 @@ class DrupalDriver(DefaultDriver):
     def logout(self):
         url = self.logout_url if qsatype.FLUtil.isInProd() else self.test_logout_url
 
-        self.send_request("post", url, data={})
+        self.send_request("post", url, data={}, success_code=200)
 
         return True
