@@ -1,3 +1,5 @@
+import json
+
 from YBLEGACY import qsatype
 
 from controllers.api.sync.base.drivers.default_driver import DefaultDriver
@@ -6,6 +8,7 @@ from controllers.api.sync.base.drivers.default_driver import DefaultDriver
 class DrupalDriver(DefaultDriver):
 
     session_id = None
+    session_name = None
     user_token = None
 
     login_user = None
@@ -19,11 +22,13 @@ class DrupalDriver(DefaultDriver):
     test_logout_url = None
 
     def get_headers(self):
-        headers = {"Content-Type": "application/json"}
+        headers = super().get_headers()
 
-        if self.session_id and self.user_token:
-            headers["Cookie"] = self.session_id
-            headers["X-CSRF-Token"] = self.user_token
+        if self.session_id and self.session_name:
+            headers.update({"Cookie": "{}={}".format(self.session_name, self.session_id)})
+
+        if self.user_token:
+            headers.update({"X-CSRF-Token": self.user_token})
 
         return headers
 
@@ -37,8 +42,9 @@ class DrupalDriver(DefaultDriver):
             "password": password
         }
 
-        response = self.send_request("post", url, data=body, success_code=200)
+        response = self.send_request("post", url, data=json.dumps(body))
         if response:
+            self.session_name = response["session_name"]
             self.session_id = response["sessid"]
             self.user_token = response["token"]
 
@@ -47,6 +53,6 @@ class DrupalDriver(DefaultDriver):
     def logout(self):
         url = self.logout_url if qsatype.FLUtil.isInProd() else self.test_logout_url
 
-        self.send_request("post", url, data={}, success_code=200)
+        self.send_request("post", url, data={})
 
         return True

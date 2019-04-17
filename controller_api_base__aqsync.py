@@ -1,3 +1,5 @@
+import requests
+
 from abc import ABC, abstractmethod
 
 from django.db import transaction
@@ -38,6 +40,8 @@ class AQSync(ABC):
             if not self.before_sync():
                 self.log("Éxito", "No es momento de sincronizar")
                 return self.no_sync_sleep
+
+            self.driver.session = requests.Session()
 
             self.driver.login()
             sync_result = self.sync()

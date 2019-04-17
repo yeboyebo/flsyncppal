@@ -9,10 +9,6 @@ class AQSyncUpload(AQSync, ABC):
     def __init__(self, process_name, driver, params=None):
         super().__init__(process_name, driver, params)
 
-        self.set_sync_params({
-            "success_code": 202
-        })
-
     def sync(self):
         data = self.get_data()
 

@@ -1,39 +1,36 @@
 import requests
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from YBLEGACY import qsatype
 
 
 class DefaultDriver(ABC):
 
-    success_code = None
+    session = None
+
     url = None
     test_url = None
+    auth = None
+    test_auth = None
 
-    def __init__(self):
-        self.success_code = 200
-
-    def send_request(self, request_type, url=None, data=None, replace=[], success_code=None):
+    def send_request(self, request_type, url=None, data=None, replace=[]):
         url = url if url else self.get_url(replace)
         headers = self.get_headers()
 
         response = None
 
         if request_type == "get":
-            response = requests.get(url, headers=headers, data=data)
+            response = self.session.get(url, headers=headers, data=data)
         elif request_type == "post":
-            response = requests.post(url, headers=headers, data=data)
+            response = self.session.post(url, headers=headers, data=data)
         elif request_type == "put":
-            response = requests.put(url, headers=headers, data=data)
+            response = self.session.put(url, headers=headers, data=data)
         elif request_type == "delete":
-            response = requests.delete(url, headers=headers, data=data)
+            response = self.session.delete(url, headers=headers, data=data)
         else:
             raise NameError("No se encuentra el tipo de petición {}".format(request_type))
 
-        if not success_code:
-            success_code = self.success_code
-
-        return self.proccess_response(response, success_code)
+        return self.proccess_response(response)
 
     def get_url(self, replace=[]):
         url = self.url if qsatype.FLUtil.isInProd() else self.test_url
@@ -46,8 +43,8 @@ class DefaultDriver(ABC):
 
         return url
 
-    def proccess_response(self, response, success_code):
-        if response.status_code == success_code:
+    def proccess_response(self, response):
+        if response.status_code == requests.codes.ok:
             try:
                 return response.json()
             except Exception as e:
@@ -55,9 +52,16 @@ class DefaultDriver(ABC):
         else:
             raise NameError("Código {}. {}".format(response.status_code, response.text))
 
-    @abstractmethod
     def get_headers(self):
-        pass
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        auth = self.auth if qsatype.FLUtil.isInProd() else self.test_auth
+        if auth:
+            headers.update({"Authorization": auth})
+
+        return headers
 
     def login(self):
         return True
