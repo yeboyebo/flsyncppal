@@ -17,6 +17,7 @@ class AQSync(ABC):
 
     start_date = None
     start_time = None
+    log = None
 
     process_name = None
     params = None
@@ -29,6 +30,7 @@ class AQSync(ABC):
         self.small_sleep = 10
         self.large_sleep = 180
         self.no_sync_sleep = 300
+        self.logs = []
 
         now = str(qsatype.Date())
         self.start_date = now[:10]
@@ -39,7 +41,7 @@ class AQSync(ABC):
         try:
             if not self.before_sync():
                 self.log("Éxito", "No es momento de sincronizar")
-                return self.no_sync_sleep
+                return {"countdown": self.no_sync_sleep, "data": {"log": self.logs}, "status": 200}
 
             self.driver.session = requests.Session()
             self.driver.in_production = self.params["production"] if "production" in self.params else False
@@ -48,11 +50,11 @@ class AQSync(ABC):
             sync_result = self.sync()
             self.driver.logout()
 
-            return sync_result
+            return {"countdown": sync_result, "data": {"log": self.logs}, "status": 200}
 
         except Exception as e:
             self.log("Error", e)
-            return self.large_sleep
+            return {"countdown": self.large_sleep, "data": {"log": self.logs}, "status": 500}
 
     def before_sync(self):
         return True
@@ -74,4 +76,10 @@ class AQSync(ABC):
 
     def log(self, msg_type, msg):
         qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
-        syncppal.iface.log("{}. {}".format(msg_type, str(msg).replace("'", "\"")), self.process_name)
+
+        self.logs.append({
+            "msg_type": msg_type,
+            "msg": msg,
+            "process_name": self.process_name,
+            "customer_name": syncppal.iface.get_customer()
+        })

@@ -1,6 +1,8 @@
+import json
+import requests
+
 from AQNEXT.celery import app
 
-from YBLEGACY import qsatype
 from YBUTILS import globalValues
 # from YBUTILS import DbRouter
 
@@ -32,41 +34,13 @@ class TaskManager():
 
     def task_executer(self, sync_object_name, params={}, countdown=0):
         if "continuous" not in params or not params["continuous"]:
-            return self.sync_task(sync_object_name, params)
+            response = self.sync_task(sync_object_name, params)
+            self.log(response["data"]["log"], params)
+            return response
 
         app.tasks[sync_object_name].apply_async((sync_object_name, params,), countdown=countdown)
 
-        response = {"status": 200, "data": {"msg": "Tarea encolada correctamente"}, "countdown": countdown}
-        return response
-
-    def continuous_task(self, sync_object_name, params={}):
-        # DbRouter.ThreadLocalMiddleware.process_request_celery(None, request)
-        sync_object = self.get_sync_object(sync_object_name, params)
-
-        response = self.sync_task(sync_object_name, params, sync_object=sync_object)
-
-        # tmp (deberia venir del proceso)
-        response = {"countdown": response, "status": 200, "data": {"no-data": "no-data"}}
-
-        activo = self.get_activo(sync_object.process_name)
-        if activo:
-            if "first" in params and params["first"]:
-                params["first"] = False
-
-            self.task_executer(sync_object_name, params=params, countdown=response["countdown"])
-        else:
-            syncppal.iface.log("Info. Proceso detenido", sync_object.process_name)
-
-    def sync_task(self, sync_object_name, params={}, sync_object=None):
-        if not sync_object:
-            sync_object = self.get_sync_object(sync_object_name, params)
-
-        response = sync_object.start()
-
-        # tmp (deberia venir del proceso)
-        response = {"countdown": response, "status": 200, "data": {"no-data": "no-data"}}
-
-        return response
+        return {"status": 200, "data": {"msg": "Tarea encolada correctamente"}, "countdown": countdown}
 
     def get_sync_object(self, sync_object_name, params={}):
         sync_object_class, sync_driver = self.sync_object_factory(sync_object_name)
@@ -74,11 +48,59 @@ class TaskManager():
 
         return sync_object
 
-    def get_activo(self, process_name):
+    def sync_task(self, sync_object_name, params={}, sync_object=None):
+        if not sync_object:
+            sync_object = self.get_sync_object(sync_object_name, params)
+
+        return sync_object.start()
+
+    def continuous_task(self, sync_object_name, params={}):
+        # DbRouter.ThreadLocalMiddleware.process_request_celery(None, request)
+        sync_object = self.get_sync_object(sync_object_name, params)
+        response = self.sync_task(sync_object_name, params, sync_object=sync_object)
+
+        activo = self.get_activo(sync_object.process_name, params)
+        if activo:
+            if "first" in params and params["first"]:
+                params["first"] = False
+
+            self.task_executer(sync_object_name, params=params, countdown=response["countdown"])
+        else:
+            response["data"]["log"].append({
+                "msg_type": "Info",
+                "msg": "Proceso detenido",
+                "process_name": sync_object.process_name,
+                "customer_name": syncppal.iface.get_customer()
+            })
+
+        self.log(response["data"]["log"], params)
+
+    def log(self, logs, params={}):
+        headers = {"Content-Type": "application/json"}
+        logs = {"log": logs}
+
+        url = "http://127.0.0.1:9000/api/diagnosis/log/append"
+        if "production" in params and params["production"]:
+            url = "https://diagnosis.yeboyebo.es/api/diagnosis/log/append"
+
         try:
-            resul = qsatype.FLSqlQuery().execSql("SELECT activo FROM yb_procesos WHERE proceso = '{}'".format(process_name), "yeboyebo")
-            return resul[0][0]
+            return requests.post(url, headers=headers, data=json.dumps(logs))
         except Exception:
+            print("Error. No se pudo escribir en el log")
+            return False
+
+    def get_activo(self, process_name, params={}):
+        url = "http://127.0.0.1:9000/api/diagnosis/process/getactive/{}"
+        if "production" in params and params["production"]:
+            url = "https://diagnosis.yeboyebo.es/api/diagnosis/process/getactive/{}"
+
+        url = url.format(process_name)
+
+        try:
+            response = requests.get(url)
+            return response.json()["active"]
+        except Exception:
+            print("Error. No se pudo recibir el estado del proceso")
             return False
 
     def get_activity(self):
