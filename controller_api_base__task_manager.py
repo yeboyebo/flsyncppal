@@ -2,7 +2,7 @@ from AQNEXT.celery import app
 
 from YBLEGACY import qsatype
 from YBUTILS import globalValues
-from YBUTILS import DbRouter
+# from YBUTILS import DbRouter
 
 from models.flsyncppal import flsyncppal_def as syncppal
 
@@ -21,7 +21,7 @@ class TaskManager():
         for sync_object_name in self.sync_object_dict:
             @app.task(name=sync_object_name)
             def decorated(*args):
-                self.sync_task(*args)
+                self.continuous_task(*args)
 
     def sync_object_factory(self, sync_object_name):
         if sync_object_name not in self.sync_object_dict:
@@ -30,33 +30,49 @@ class TaskManager():
         sync_object_dict = self.sync_object_dict[sync_object_name]
         return sync_object_dict["sync_object"], sync_object_dict["driver"]
 
-    def task_executer(self, request, sync_object_name, params={}, countdown=0):
-        app.tasks[sync_object_name].apply_async((request, sync_object_name, params,), countdown=countdown)
-
-    def sync_task(self, request, sync_object_name, params={}):
-        DbRouter.ThreadLocalMiddleware.process_request_celery(None, request)
-
-        sync_object_class, sync_driver = self.sync_object_factory(sync_object_name)
-        sync_object = sync_object_class(sync_driver(), params)
-
-        activo = self.get_activo(sync_object.process_name)
-        if activo and ("continuous" not in params or not params["continuous"]):
-            syncppal.iface.log("Info. El proceso ya se está ejecutando en segundo plano", sync_object.process_name)
-            return
-
-        countdown_time = sync_object.start()
-
+    def task_executer(self, sync_object_name, params={}, countdown=0):
         if "continuous" not in params or not params["continuous"]:
-            return
+            return self.sync_task(sync_object_name, params)
+
+        app.tasks[sync_object_name].apply_async((sync_object_name, params,), countdown=countdown)
+
+        response = {"status": 200, "data": {"msg": "Tarea encolada correctamente"}, "countdown": countdown}
+        return response
+
+    def continuous_task(self, sync_object_name, params={}):
+        # DbRouter.ThreadLocalMiddleware.process_request_celery(None, request)
+        sync_object = self.get_sync_object(sync_object_name, params)
+
+        response = self.sync_task(sync_object_name, params, sync_object=sync_object)
+
+        # tmp (deberia venir del proceso)
+        response = {"countdown": response, "status": 200, "data": {"no-data": "no-data"}}
 
         activo = self.get_activo(sync_object.process_name)
         if activo:
             if "first" in params and params["first"]:
                 params["first"] = False
 
-            self.task_executer(request, sync_object_name, params=params, countdown=countdown_time)
+            self.task_executer(sync_object_name, params=params, countdown=response["countdown"])
         else:
             syncppal.iface.log("Info. Proceso detenido", sync_object.process_name)
+
+    def sync_task(self, sync_object_name, params={}, sync_object=None):
+        if not sync_object:
+            sync_object = self.get_sync_object(sync_object_name, params)
+
+        response = sync_object.start()
+
+        # tmp (deberia venir del proceso)
+        response = {"countdown": response, "status": 200, "data": {"no-data": "no-data"}}
+
+        return response
+
+    def get_sync_object(self, sync_object_name, params={}):
+        sync_object_class, sync_driver = self.sync_object_factory(sync_object_name)
+        sync_object = sync_object_class(sync_driver(), params)
+
+        return sync_object
 
     def get_activo(self, process_name):
         try:

@@ -7,6 +7,7 @@ from YBLEGACY import qsatype
 class DefaultDriver(ABC):
 
     session = None
+    in_production = None
 
     success_code = None
     url = None
@@ -40,7 +41,7 @@ class DefaultDriver(ABC):
         return self.proccess_response(response, success_code)
 
     def get_url(self, replace=[]):
-        url = self.url if qsatype.FLUtil.isInProd() else self.test_url
+        url = self.url if self.in_production else self.test_url
 
         if replace:
             url = url.format(*replace)
@@ -64,7 +65,7 @@ class DefaultDriver(ABC):
             "Content-Type": "application/json"
         }
 
-        auth = self.auth if qsatype.FLUtil.isInProd() else self.test_auth
+        auth = self.auth if self.in_production else self.test_auth
         if auth:
             headers.update({"Authorization": auth})
 

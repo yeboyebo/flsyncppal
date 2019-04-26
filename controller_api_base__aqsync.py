@@ -42,6 +42,7 @@ class AQSync(ABC):
                 return self.no_sync_sleep
 
             self.driver.session = requests.Session()
+            self.driver.in_production = self.params["production"] if "production" in self.params else False
 
             self.driver.login()
             sync_result = self.sync()

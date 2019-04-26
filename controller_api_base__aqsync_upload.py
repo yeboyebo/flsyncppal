@@ -1,7 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.aqsync import AQSync
+from controllers.api.sync.base.controllers.aqsync import AQSync
 
 
 class AQSyncUpload(AQSync, ABC):

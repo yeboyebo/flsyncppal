@@ -34,15 +34,15 @@
             },
             {
                 "name": "controller_api_base__aqsync_download.py",
-                "path": "controllers/api/sync/base/"
+                "path": "controllers/api/sync/base/controllers/"
             },
             {
                 "name": "controller_api_base__aqsync.py",
-                "path": "controllers/api/sync/base/"
+                "path": "controllers/api/sync/base/controllers/"
             },
             {
                 "name": "controller_api_base__aqsync_upload.py",
-                "path": "controllers/api/sync/base/"
+                "path": "controllers/api/sync/base/controllers/"
             },
             {
                 "name": "model_flsyncppal__aqmodel_raw.py",
@@ -53,7 +53,7 @@
                 "path": "controllers/api/sync/base/serializers/"
             },
             {
-                "path": "controllers/api/sync/base/",
+                "path": "controllers/api/sync/base/controllers/",
                 "name": "controller_api_base__task_manager.py"
             },
             {
@@ -67,6 +67,14 @@
             {
                 "path": "controllers/api/sync/base/drivers/",
                 "name": "controller_api_base__default_driver.py"
+            },
+            {
+                "path": "controllers/api/sync/celery/",
+                "name": "controller_api_celery__getactivity.py"
+            },
+            {
+                "path": "controllers/api/sync/celery/",
+                "name": "controller_api_celery__revoke.py"
             }
         ]
     }

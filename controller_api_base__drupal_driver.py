@@ -33,9 +33,9 @@ class DrupalDriver(DefaultDriver):
         return headers
 
     def login(self):
-        url = self.login_url if qsatype.FLUtil.isInProd() else self.test_login_url
-        user = self.login_user if qsatype.FLUtil.isInProd() else self.test_login_user
-        password = self.login_password if qsatype.FLUtil.isInProd() else self.test_login_password
+        url = self.login_url if self.in_production else self.test_login_url
+        user = self.login_user if self.in_production else self.test_login_user
+        password = self.login_password if self.in_production else self.test_login_password
 
         body = {
             "username": user,
@@ -51,7 +51,7 @@ class DrupalDriver(DefaultDriver):
         return True
 
     def logout(self):
-        url = self.logout_url if qsatype.FLUtil.isInProd() else self.test_logout_url
+        url = self.logout_url if self.in_production else self.test_logout_url
 
         self.send_request("post", url, data={}, success_code=200)
 
