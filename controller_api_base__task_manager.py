@@ -90,9 +90,9 @@ class TaskManager():
             return False
 
     def get_activo(self, process_name, params={}):
-        url = "http://127.0.0.1:9000/api/diagnosis/process/getactive/{}"
+        url = "http://127.0.0.1:9000/api/diagnosis/process/isactive/{}"
         if "production" in params and params["production"]:
-            url = "https://diagnosis.yeboyebo.es/api/diagnosis/process/getactive/{}"
+            url = "https://diagnosis.yeboyebo.es/api/diagnosis/process/isactive/{}"
 
         url = url.format(process_name)
 

@@ -75,6 +75,10 @@
             {
                 "path": "controllers/api/sync/celery/",
                 "name": "controller_api_celery__revoke.py"
+            },
+            {
+                "path": "controllers/api/",
+                "name": "controller_api____init__.py"
             }
         ]
     }
