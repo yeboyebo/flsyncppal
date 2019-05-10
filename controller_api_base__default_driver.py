@@ -58,7 +58,10 @@ class DefaultDriver(ABC):
             except Exception as e:
                 raise NameError("Mala respuesta del servidor. {}".format(e))
         else:
-            raise NameError("Código {}. {}".format(response.status_code, response.text))
+            try:
+                raise NameError("Código {}. {}".format(response.status_code, response.reason))
+            except Exception:
+                raise NameError("Código {}. {}".format(response.status_code, response.text))
 
     def get_headers(self):
         headers = {
