@@ -1,7 +1,4 @@
-import requests
 from abc import ABC
-
-from YBLEGACY import qsatype
 
 
 class DefaultDriver(ABC):
