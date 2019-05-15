@@ -1,6 +1,11 @@
+import requests
+import json
+
 from abc import ABC, abstractmethod
 
 from controllers.api.sync.base.controllers.aqsync import AQSync
+
+from models.flsyncppal import flsyncppal_def as syncppal
 
 
 class AQSyncDownload(AQSync, ABC):
@@ -33,7 +38,6 @@ class AQSyncDownload(AQSync, ABC):
                 self.process_data(data)
                 self.success_data.append(data)
             except Exception as e:
-                self.error_data.append(data)
                 self.sync_error(data, e)
 
         return True
@@ -47,7 +51,31 @@ class AQSyncDownload(AQSync, ABC):
         pass
 
     def sync_error(self, data, exc):
+        self.error_data.append(data)
+
         self.log("Error", "Ocurrió un error al sincronizar el registro {}. {}".format(data[self.origin_field], exc))
+
+        if self.params["continuous"]:
+            self.add_failed_process(data, exc)
 
     def after_sync_error(self, data, exc):
         self.log("Error", "Ocurrió un error al marcar como sincronizado el registro {}. {}".format(data[self.origin_field], exc))
+
+    def add_failed_process(self, data, exc):
+        headers = {"Content-Type": "application/json"}
+        data = {
+            "customer_name": syncppal.iface.get_customer(),
+            "process_name": self.process_name,
+            "error": exc,
+            "pk": data[self.origin_field]
+        }
+
+        url = "{}/api/diagnosis/process/failed".format(self.params["url_diagnosis"])
+
+        try:
+            response = requests.post(url, headers=headers, data=json.dumps(data))
+            if response.status_code != 200:
+                raise NameError("Error. No se pudo incluir el registro {} en procesos erróneos. Código {}".format(data[self.origin_field], response.status_code))
+        except Exception as e:
+            self.log("Error", "No se pudo incluir el registro {} en procesos erróneos. {}".format(data[self.origin_field], e))
+            return False

@@ -4,7 +4,6 @@ import requests
 from AQNEXT.celery import app
 
 from YBUTILS import globalValues
-# from YBUTILS import DbRouter
 
 from models.flsyncppal import flsyncppal_def as syncppal
 
@@ -38,6 +37,7 @@ class TaskManager():
             self.log(response["data"]["log"], params)
             return response
 
+        params["url_diagnosis"] = self.get_diagnosis_url(params)
         app.tasks[sync_object_name].apply_async((sync_object_name, params,), countdown=countdown)
 
         return {"status": 200, "data": {"msg": "Tarea encolada correctamente"}, "countdown": countdown}
@@ -55,7 +55,6 @@ class TaskManager():
         return sync_object.start()
 
     def continuous_task(self, sync_object_name, params={}):
-        # DbRouter.ThreadLocalMiddleware.process_request_celery(None, request)
         sync_object = self.get_sync_object(sync_object_name, params)
         response = self.sync_task(sync_object_name, params, sync_object=sync_object)
 
@@ -75,26 +74,31 @@ class TaskManager():
 
         self.log(response["data"]["log"], params)
 
+    def get_diagnosis_url(self, params={}):
+        if "url_diagnosis" in params and params["url_diagnosis"]:
+            return params["url_diagnosis"]
+
+        if "production" in params and params["production"]:
+            return "https://diagnosis.yeboyebo.es"
+
+        return "http://127.0.0.1:9000"
+
     def log(self, logs, params={}):
         headers = {"Content-Type": "application/json"}
         logs = {"log": logs}
 
-        url = "http://127.0.0.1:9000/api/diagnosis/log/append"
-        if "production" in params and params["production"]:
-            url = "https://diagnosis.yeboyebo.es/api/diagnosis/log/append"
+        url = "{}/api/diagnosis/log/append".format(self.get_diagnosis_url(params))
 
         try:
-            return requests.post(url, headers=headers, data=json.dumps(logs))
+            response = requests.post(url, headers=headers, data=json.dumps(logs))
+            if response.status_code != 200:
+                raise NameError("Error. No se pudo escribir en el log")
         except Exception:
             print("Error. No se pudo escribir en el log")
             return False
 
     def get_activo(self, process_name, params={}):
-        url = "http://127.0.0.1:9000/api/diagnosis/process/isactive/{}"
-        if "production" in params and params["production"]:
-            url = "https://diagnosis.yeboyebo.es/api/diagnosis/process/isactive/{}"
-
-        url = url.format(process_name)
+        url = "{}/api/diagnosis/process/isactive/{}".format(self.get_diagnosis_url(params), process_name)
 
         try:
             response = requests.get(url)
