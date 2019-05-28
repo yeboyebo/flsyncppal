@@ -17,7 +17,7 @@ class AQSync(ABC):
 
     start_date = None
     start_time = None
-    log = None
+    logs = None
 
     process_name = None
     params = None
