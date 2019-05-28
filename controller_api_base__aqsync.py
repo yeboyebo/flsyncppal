@@ -75,7 +75,13 @@ class AQSync(ABC):
         return self.driver.send_request(request_type, data=data, replace=replace)
 
     def log(self, msg_type, msg):
-        qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
+        try:
+            qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
+        except Exception:
+            try:
+                qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")).encode("ascii"))
+            except Exception:
+                pass
 
         self.logs.append({
             "msg_type": msg_type,
