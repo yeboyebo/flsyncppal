@@ -46,13 +46,10 @@ class TaskManager():
     def get_sync_object(self, sync_object_name, params={}):
         sync_object_class, sync_driver = self.sync_object_factory(sync_object_name)
 
-        sync_object = None
         if sync_driver:
-            sync_object = sync_object_class(sync_driver(), params)
-        else:
-            sync_object = sync_object_class(params)
+            return sync_object_class(sync_driver(), params)
 
-        return sync_object
+        return sync_object_class(params)
 
     def sync_task(self, sync_object_name, params={}, sync_object=None):
         if not sync_object:
