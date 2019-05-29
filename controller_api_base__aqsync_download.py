@@ -3,12 +3,12 @@ import json
 
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.controllers.aqsync import AQSync
+from controllers.api.sync.base.controllers.aqsync_connect import AQSyncConnect
 
 from models.flsyncppal import flsyncppal_def as syncppal
 
 
-class AQSyncDownload(AQSync, ABC):
+class AQSyncDownload(AQSyncConnect, ABC):
 
     success_data = None
     error_data = None

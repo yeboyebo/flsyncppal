@@ -29,7 +29,8 @@ class TaskManager():
             return None
 
         sync_object_dict = self.sync_object_dict[sync_object_name]
-        return sync_object_dict["sync_object"], sync_object_dict["driver"]
+        sync_driver = sync_object_dict["driver"] if "driver" in sync_object_dict else None
+        return sync_object_dict["sync_object"], sync_driver
 
     def task_executer(self, sync_object_name, params={}, countdown=0):
         if "continuous" not in params or not params["continuous"]:
@@ -44,7 +45,8 @@ class TaskManager():
 
     def get_sync_object(self, sync_object_name, params={}):
         sync_object_class, sync_driver = self.sync_object_factory(sync_object_name)
-        sync_object = sync_object_class(sync_driver(), params)
+        sync_driver = sync_driver() if sync_driver else None
+        sync_object = sync_object_class(sync_driver, params)
 
         return sync_object
 

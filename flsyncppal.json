@@ -79,6 +79,14 @@
             {
                 "path": "controllers/api/",
                 "name": "controller_api____init__.py"
+            },
+            {
+                "path": "controllers/api/sync/base/controllers/",
+                "name": "controller_api_base__aqsync_connect.py"
+            },
+            {
+                "path": "controllers/api/sync/base/controllers/",
+                "name": "controller_api_base__aqsync_recieve.py"
             }
         ]
     }
