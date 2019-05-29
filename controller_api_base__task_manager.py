@@ -48,7 +48,7 @@ class TaskManager():
 
         sync_object = None
         if sync_driver:
-            sync_object = sync_object_class(sync_driver, params)
+            sync_object = sync_object_class(sync_driver(), params)
         else:
             sync_object = sync_object_class(params)
 
