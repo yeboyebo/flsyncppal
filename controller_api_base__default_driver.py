@@ -1,3 +1,5 @@
+import requests
+
 from abc import ABC
 
 
@@ -14,6 +16,7 @@ class DefaultDriver(ABC):
 
     def __init__(self):
         self.success_code = 200
+        self.session = requests.Session()
 
     def send_request(self, request_type, url=None, data=None, replace=[], success_code=None):
         url = url if url else self.get_url(replace)

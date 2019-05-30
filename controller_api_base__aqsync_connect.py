@@ -1,5 +1,3 @@
-import requests
-
 from abc import ABC, abstractmethod
 
 from controllers.api.sync.base.controllers.aqsync import AQSync
@@ -26,7 +24,6 @@ class AQSyncConnect(AQSync, ABC):
                 self.log("Éxito", "No es momento de sincronizar")
                 return {"countdown": self.no_sync_sleep, "data": {"log": self.logs}, "status": 200}
 
-            self.driver.session = requests.Session()
             self.driver.in_production = self.params["production"] if "production" in self.params else False
 
             self.driver.login()
