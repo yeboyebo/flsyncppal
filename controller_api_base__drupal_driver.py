@@ -1,7 +1,5 @@
 import json
 
-from YBLEGACY import qsatype
-
 from controllers.api.sync.base.drivers.default_driver import DefaultDriver
 
 
@@ -41,6 +39,10 @@ class DrupalDriver(DefaultDriver):
             "username": user,
             "password": password
         }
+
+        self.session_id = None
+        self.session_name = None
+        self.user_token = None
 
         response = self.send_request("post", url, data=json.dumps(body), success_code=200)
         if response:
