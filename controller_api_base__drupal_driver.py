@@ -1,9 +1,9 @@
 import json
 
-from controllers.api.sync.base.drivers.default_driver import DefaultDriver
+from controllers.api.sync.base.drivers.default_driver import WebDriver
 
 
-class DrupalDriver(DefaultDriver):
+class DrupalDriver(WebDriver):
 
     session_id = None
     session_name = None

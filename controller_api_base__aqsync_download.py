@@ -22,11 +22,15 @@ class AQSyncDownload(AQSyncConnect, ABC):
         self.origin_field = "entity_id"
 
     def sync(self):
-        response_data = self.send_request("get")
+        response_data = self.get_data()
+
         if not self.process_all_data(response_data):
             return self.large_sleep
 
         return self.after_sync()
+
+    def get_data(self):
+        return self.send_request("get")
 
     def process_all_data(self, all_data):
         if all_data == []:

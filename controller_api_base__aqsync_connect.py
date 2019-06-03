@@ -51,5 +51,8 @@ class AQSyncConnect(AQSync, ABC):
         for prop in params:
             setattr(self.driver, prop, params[prop])
 
-    def send_request(self, request_type, data=None, replace=[]):
-        return self.driver.send_request(request_type, data=data, replace=replace)
+    def send_request(self, *args, **kwargs):
+        return self.driver.send_request(*args, **kwargs)
+
+    def execute(self, *args, **kwargs):
+        return self.driver.execute(*args, **kwargs)

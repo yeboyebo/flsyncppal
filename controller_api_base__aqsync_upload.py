@@ -16,12 +16,15 @@ class AQSyncUpload(AQSyncConnect, ABC):
             self.log("Éxito", "No hay datos que sincronizar")
             return self.large_sleep
 
-        response_data = self.send_request("post", data=json.dumps(data))
+        response_data = self.send_data(data)
         return self.after_sync(response_data)
 
     @abstractmethod
     def get_data(self):
         pass
+
+    def send_data(self, data):
+        return self.send_request("post", data=json.dumps(data))
 
     @abstractmethod
     def after_sync(self, response_data=None):

@@ -87,6 +87,18 @@
             {
                 "path": "controllers/api/sync/base/controllers/",
                 "name": "controller_api_base__aqsync_recieve.py"
+            },
+            {
+                "name": "controller_api_base__psql_driver.py",
+                "path": "controllers/api/sync/base/drivers/"
+            },
+            {
+                "name": "controller_api_base__web_driver.py",
+                "path": "controllers/api/sync/base/drivers/"
+            },
+            {
+                "name": "controller_api_base__sql_driver.py",
+                "path": "controllers/api/sync/base/drivers/"
             }
         ]
     }
