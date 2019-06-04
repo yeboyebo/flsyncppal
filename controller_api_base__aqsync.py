@@ -36,11 +36,11 @@ class AQSync(ABC):
         pass
 
     def log(self, msg_type, msg):
-        qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
+        # qsatype.debug("{} {}. {}.".format(msg_type, self.process_name, str(msg).replace("'", "\"")))
 
         self.logs.append({
             "msg_type": msg_type,
-            "msg": msg,
+            "msg": str(msg).replace("'", "\""),
             "process_name": self.process_name,
             "customer_name": syncppal.iface.get_customer()
         })
