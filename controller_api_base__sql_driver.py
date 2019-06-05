@@ -14,6 +14,7 @@ class SqlDriver(DefaultDriver, ABC):
         try:
             connection_data = self.get_connection_data()
             self.connect(connection_data)
+            self.execute("SELECT id FROM empresa WHERE 1 = 1")
         except Exception as e:
             raise NameError("No se pudo conectar a la BD {}. {}".format(self.name, e))
 
