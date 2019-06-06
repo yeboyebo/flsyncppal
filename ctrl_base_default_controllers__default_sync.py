@@ -5,7 +5,7 @@ from YBLEGACY import qsatype
 from models.flsyncppal import flsyncppal_def as syncppal
 
 
-class AQSync(ABC):
+class DefaultSync(ABC):
 
     start_date = None
     start_time = None

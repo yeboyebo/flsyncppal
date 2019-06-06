@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class AQSerializer(ABC):
+class DefaultSerializer(ABC):
 
     init_data = None
     data = None

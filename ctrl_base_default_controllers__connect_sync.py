@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.controllers.aqsync import AQSync
+from controllers.base.default.controllers.default_sync import DefaultSync
 
 
-class AQSyncConnect(AQSync, ABC):
+class ConnectSync(DefaultSync, ABC):
 
     small_sleep = None
     large_sleep = None

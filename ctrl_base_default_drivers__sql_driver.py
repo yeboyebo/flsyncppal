@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.drivers.default_driver import DefaultDriver
+from controllers.base.default.drivers.default_driver import DefaultDriver
 
 
 class SqlDriver(DefaultDriver, ABC):

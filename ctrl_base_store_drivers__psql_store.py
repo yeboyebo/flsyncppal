@@ -2,10 +2,10 @@ import psycopg2
 
 from YBLEGACY import qsatype
 
-from controllers.api.sync.base.drivers.sql_driver import SqlDriver
+from controllers.base.default.drivers.sql_driver import SqlDriver
 
 
-class PsqlDriver(SqlDriver):
+class PsqlStoreDriver(SqlDriver):
 
     def get_connection_data(self):
         query = qsatype.FLSqlQuery("")

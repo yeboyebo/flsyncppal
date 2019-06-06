@@ -33,72 +33,72 @@
                 "name": "app_sync__views_sync.py"
             },
             {
-                "name": "controller_api_base__aqsync_download.py",
-                "path": "controllers/api/sync/base/controllers/"
-            },
-            {
-                "name": "controller_api_base__aqsync.py",
-                "path": "controllers/api/sync/base/controllers/"
-            },
-            {
-                "name": "controller_api_base__aqsync_upload.py",
-                "path": "controllers/api/sync/base/controllers/"
-            },
-            {
                 "name": "model_flsyncppal__aqmodel_raw.py",
                 "path": "models/flsyncppal/objects/"
             },
             {
-                "name": "controller_api_base__aqserializer.py",
-                "path": "controllers/api/sync/base/serializers/"
-            },
-            {
-                "path": "controllers/api/sync/base/controllers/",
-                "name": "controller_api_base__task_manager.py"
-            },
-            {
-                "path": "controllers/api/sync/base/drivers/",
-                "name": "controller_api_base__magento_driver.py"
-            },
-            {
-                "path": "controllers/api/sync/base/drivers/",
-                "name": "controller_api_base__drupal_driver.py"
-            },
-            {
-                "path": "controllers/api/sync/base/drivers/",
-                "name": "controller_api_base__default_driver.py"
-            },
-            {
-                "path": "controllers/api/sync/celery/",
-                "name": "controller_api_celery__getactivity.py"
-            },
-            {
-                "path": "controllers/api/sync/celery/",
-                "name": "controller_api_celery__revoke.py"
-            },
-            {
                 "path": "controllers/api/",
-                "name": "controller_api____init__.py"
+                "name": "ctrl_api____init__.py"
             },
             {
-                "path": "controllers/api/sync/base/controllers/",
-                "name": "controller_api_base__aqsync_connect.py"
+                "name": "ctrl_base_store_drivers__psql_store.py",
+                "path": "controllers/base/store/drivers/"
             },
             {
-                "path": "controllers/api/sync/base/controllers/",
-                "name": "controller_api_base__aqsync_recieve.py"
+                "name": "ctrl_base_magento_drivers__magento.py",
+                "path": "controllers/base/magento/drivers/"
             },
             {
-                "name": "controller_api_base__psql_driver.py",
-                "path": "controllers/api/sync/base/drivers/"
+                "name": "ctrl_base_drupal_drivers__drupal.py",
+                "path": "controllers/base/drupal/drivers/"
             },
             {
-                "name": "controller_api_base__web_driver.py",
-                "path": "controllers/api/sync/base/drivers/"
+                "name": "ctrl_base_default_controllers__download_sync.py",
+                "path": "controllers/base/default/controllers/"
             },
             {
-                "name": "controller_api_base__sql_driver.py",
-                "path": "controllers/api/sync/base/drivers/"
+                "name": "ctrl_base_default_controllers__recieve_sync.py",
+                "path": "controllers/base/default/controllers/"
+            },
+            {
+                "name": "ctrl_base_default_controllers__default_sync.py",
+                "path": "controllers/base/default/controllers/"
+            },
+            {
+                "name": "ctrl_base_default_controllers__upload_sync.py",
+                "path": "controllers/base/default/controllers/"
+            },
+            {
+                "name": "ctrl_base_default_controllers__connect_sync.py",
+                "path": "controllers/base/default/controllers/"
+            },
+            {
+                "name": "ctrl_base_default_drivers__web_driver.py",
+                "path": "controllers/base/default/drivers/"
+            },
+            {
+                "name": "ctrl_base_default_drivers__sql_driver.py",
+                "path": "controllers/base/default/drivers/"
+            },
+            {
+                "name": "ctrl_base_default_serializers__default_serializer.py",
+                "path": "controllers/base/default/serializers/"
+            },
+            {
+                "name": "ctrl_api_celery_activity__get.py",
+                "path": "controllers/api/celery/activity/"
+            },
+            {
+                "name": "ctrl_api_celery_tasks__revoke.py",
+                "path": "controllers/api/celery/tasks/"
+            },
+            {
+                "name": "ctrl_base_default_managers__task_manager.py",
+                "path": "controllers/base/default/managers/"
+            },
+            {
+                "path": "controllers/base/default/drivers/",
+                "name": "ctrl_base_default_drivers__default_driver.py"
             }
         ]
     }

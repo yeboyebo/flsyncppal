@@ -1,6 +1,6 @@
 import json
 
-from controllers.api.sync.base.drivers.web_driver import WebDriver
+from controllers.base.default.drivers.web_driver import WebDriver
 
 
 class DrupalDriver(WebDriver):

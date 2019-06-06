@@ -1,10 +1,10 @@
 import json
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.controllers.aqsync_connect import AQSyncConnect
+from controllers.base.default.controllers.connect_sync import ConnectSync
 
 
-class AQSyncUpload(AQSyncConnect, ABC):
+class UploadSync(ConnectSync, ABC):
 
     def __init__(self, process_name, driver, params=None):
         super().__init__(process_name, driver, params)

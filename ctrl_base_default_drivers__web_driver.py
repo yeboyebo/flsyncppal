@@ -2,7 +2,7 @@ import requests
 
 from abc import ABC
 
-from controllers.api.sync.base.drivers.default_driver import DefaultDriver
+from controllers.base.default.drivers.default_driver import DefaultDriver
 
 
 class WebDriver(DefaultDriver, ABC):

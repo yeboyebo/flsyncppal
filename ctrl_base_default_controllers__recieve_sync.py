@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from controllers.api.sync.base.controllers.aqsync import AQSync
+from controllers.base.default.controllers.default_sync import DefaultSync
 
 
-class AQSyncRecieve(AQSync, ABC):
+class RecieveSync(DefaultSync, ABC):
 
     def sync_flow(self):
         try:
