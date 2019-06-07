@@ -28,7 +28,15 @@ class DefaultSerializer(ABC):
         return value
 
     def set_data_value(self, data_key, value):
-        self.data[data_key] = value
+        new_dict = self.data
+
+        data_keys = data_key.split("//")
+        for key in data_keys[:-1]:
+            if key not in new_dict:
+                new_dict[key] = {}
+            new_dict = new_dict[key]
+
+        new_dict[data_keys[-1]] = value
 
     def set_string_value(self, data_key, value, max_characters=255):
         if value is None:
