@@ -29,3 +29,13 @@ class UploadSync(ConnectSync, ABC):
     @abstractmethod
     def after_sync(self, response_data=None):
         pass
+
+    def fetch_query(self, q):
+        field_list = [field.strip() for field in q.select().split(",")]
+
+        rows = []
+        while q.next():
+            row = {field: q.value(field) for (field) in field_list}
+            rows.append(row)
+
+        return rows

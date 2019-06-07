@@ -99,6 +99,26 @@
             {
                 "path": "controllers/base/default/drivers/",
                 "name": "ctrl_base_default_drivers__default_driver.py"
+            },
+            {
+                "path": "controllers/base/magento2/drivers/",
+                "name": "ctrl_base_magento2_drivers__magento2.py"
+            },
+            {
+                "path": "controllers/base/magento2/products/controllers/",
+                "name": "ctrl_base_magento2_products__products_upload.py"
+            },
+            {
+                "path": "controllers/base/magento2/products/serializers/",
+                "name": "ctrl_base_magento2_products__configurable_product_serializer.py"
+            },
+            {
+                "path": "controllers/base/magento2/products/serializers/",
+                "name": "ctrl_base_magento2_products__simple_product_serializer.py"
+            },
+            {
+                "path": "controllers/base/magento2/products/serializers/",
+                "name": "ctrl_base_magento2_products__product_link_serializer.py"
             }
         ]
     }
