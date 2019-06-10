@@ -19,9 +19,6 @@ class PsqlStoreDriver(SqlDriver):
         if not query.first():
             return False
 
-        if not query.first():
-            return False
-
         return "user='{}' password='{}' dbname='{}' host='{}' port='{}'".format(query.value("usuario"), query.value("contrasena"), query.value("nombrebd"), query.value("servidor"), query.value("puerto"))
 
     def connect(self, connection_data):
