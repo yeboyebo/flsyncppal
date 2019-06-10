@@ -97,7 +97,7 @@ class ProductsUpload(UploadSync, ABC):
 
         if data["product_links"]:
             for product_link in data["product_links"]:
-                self.send_request("post", url=link_url.format(data["configurable_product"]["sku"]), data=json.dumps(product_link))
+                self.send_request("post", url=link_url.format(data["configurable_product"]["product"]["sku"]), data=json.dumps(product_link))
 
         return data
 
