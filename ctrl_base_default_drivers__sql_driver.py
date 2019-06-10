@@ -21,6 +21,10 @@ class SqlDriver(DefaultDriver, ABC):
     def execute(self, sql):
         try:
             self.raw_execute(sql)
+
+            if sql[:6].upper() != "SELECT":
+                return True
+
             return self.fetchall()
         except Exception as e:
             raise NameError("Falló la query {}. {}".format(sql, e))
