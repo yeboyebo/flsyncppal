@@ -6,7 +6,7 @@ from controllers.base.default.serializers.default_serializer import DefaultSeria
 class SimpleProductSerializer(DefaultSerializer):
 
     def get_data(self):
-        self.set_string_relation("product//name", "sc.descripcion")
+        self.set_string_relation("product//name", "lsc.descripcion")
         self.set_string_relation("product//weight", "a.peso")
         self.set_string_relation("product//price", "a.pvp")
 
@@ -20,7 +20,7 @@ class SimpleProductSerializer(DefaultSerializer):
         self.set_string_value("product//extension_attributes//stock_item//is_in_stock", "True")
 
         custom_attributes = [
-            {"attribute_code": "description", "value": self.get_init_value("sc.descripcion")},
+            {"attribute_code": "description", "value": self.get_init_value("lsc.descripcion")},
             {"attribute_code": "tax_class_id", "value": "2"},
             {"attribute_code": "barcode", "value": self.get_init_value("aa.barcode")},
             {"attribute_code": "size", "value": self.get_init_value("aa.talla")}
@@ -31,7 +31,7 @@ class SimpleProductSerializer(DefaultSerializer):
         return True
 
     def get_sku(self):
-        referencia = self.get_init_value("sc.idobjeto")
+        referencia = self.get_init_value("lsc.idobjeto")
         talla = self.get_init_value("aa.talla")
 
         if talla == "TU":
