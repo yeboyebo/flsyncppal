@@ -38,12 +38,12 @@ class DefaultSerializer(ABC):
 
         new_dict[data_keys[-1]] = value
 
-    def set_string_value(self, data_key, value, max_characters=255):
+    def set_string_value(self, data_key, value, max_characters=255, skip_replace=False):
         if value is None:
             self.set_data_value(data_key, value)
             return
 
-        self.set_data_value(data_key, self.format_string(value, max_characters=max_characters))
+        self.set_data_value(data_key, self.format_string(value, max_characters=max_characters, skip_replace=skip_replace))
 
     def set_data_relation(self, data_key, init_key, default=None):
         value = self.get_init_value(init_key)
@@ -53,26 +53,28 @@ class DefaultSerializer(ABC):
 
         self.set_data_value(data_key, value)
 
-    def set_string_relation(self, data_key, init_key, max_characters=255, default=None):
+    def set_string_relation(self, data_key, init_key, max_characters=255, default=None, skip_replace=False):
         value = self.get_init_value(init_key)
 
         if (value is None or value == "") and default is not None:
             value = default
 
-        self.set_string_value(data_key, value, max_characters=max_characters)
+        self.set_string_value(data_key, value, max_characters=max_characters, skip_replace=skip_replace)
 
-    def format_string(self, string, max_characters=255):
+    def format_string(self, string, max_characters=255, skip_replace=False):
         if string is None or not string or string == "":
             return string
 
         string = str(string)
-        string = string.replace("'", " ")
-        string = string.replace("º", " ")
-        string = string.replace("/", " ")
-        string = string.replace("\\", " ")
-        string = string.replace("\"", " ")
-        string = string.replace("\n", " ")
-        string = string.replace("\r", " ")
-        string = string.replace("\t", " ")
+
+        if not skip_replace:
+            string = string.replace("'", " ")
+            string = string.replace("º", " ")
+            string = string.replace("/", " ")
+            string = string.replace("\\", " ")
+            string = string.replace("\"", " ")
+            string = string.replace("\n", " ")
+            string = string.replace("\r", " ")
+            string = string.replace("\t", " ")
 
         return string[:max_characters]
