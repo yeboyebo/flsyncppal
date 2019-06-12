@@ -28,7 +28,7 @@ class SimpleProductSerializer(DefaultSerializer):
             {"attribute_code": "description", "value": self.get_init_value("lsc.descripcion")},
             {"attribute_code": "tax_class_id", "value": "2"},
             {"attribute_code": "barcode", "value": self.get_init_value("aa.barcode")},
-            {"attribute_code": "size", "value": self.get_init_value("aa.talla")}
+            {"attribute_code": "size", "value": self.get_init_value("t.indice")}
         ]
 
         self.set_data_value("product//custom_attributes", custom_attributes)
