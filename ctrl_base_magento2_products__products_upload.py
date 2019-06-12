@@ -47,6 +47,9 @@ class ProductsUpload(UploadSync, ABC):
         if not configurable_product and not simple_products and not product_links:
             return False
 
+        if product_links[0] == False:
+            product_links = False
+
         return {
             "configurable_product": configurable_product,
             "simple_products": simple_products,
