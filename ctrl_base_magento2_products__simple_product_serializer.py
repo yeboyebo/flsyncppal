@@ -16,8 +16,13 @@ class SimpleProductSerializer(DefaultSerializer):
         self.set_string_value("product//visibility", "1")
         self.set_string_value("product//type_id", "simple")
 
-        self.set_string_value("product//extension_attributes//stock_item//qty", self.get_stock())
-        self.set_string_value("product//extension_attributes//stock_item//is_in_stock", "True")
+        cant_stock = self.get_stock()
+        is_in_stock = True
+        if cant_stock == 0:
+            is_in_stock = False
+
+        self.set_string_value("product//extension_attributes//stock_item//qty", cant_stock)
+        self.set_string_value("product//extension_attributes//stock_item//is_in_stock", is_in_stock)
 
         custom_attributes = [
             {"attribute_code": "description", "value": self.get_init_value("lsc.descripcion")},
