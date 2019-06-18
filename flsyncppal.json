@@ -135,6 +135,22 @@
             {
                 "name": "ctrl_base_magento2_orders__order_serializer.py",
                 "path": "controllers/base/magento2/orders/serializers/"
+            },
+            {
+                "path": "controllers/base/magento2/price/serializers/",
+                "name": "ctrl_base_magento2_price__price_serializer.py"
+            },
+            {
+                "path": "controllers/base/magento2/price/controllers/",
+                "name": "ctrl_base_magento2_price__price_upload.py"
+            },
+            {
+                "path": "controllers/base/magento2/tierprice/serializers/",
+                "name": "ctrl_base_magento2_tierprice__tierprice_serializer.py"
+            },
+            {
+                "path": "controllers/base/magento2/tierprice/controllers/",
+                "name": "ctrl_base_magento2_tierprice__tierprice_upload.py"
             }
         ]
     }
