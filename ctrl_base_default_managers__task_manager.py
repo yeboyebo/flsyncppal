@@ -1,5 +1,6 @@
 import json
 import requests
+import time
 
 from AQNEXT.celery import app
 
@@ -32,13 +33,14 @@ class TaskManager():
         sync_driver = sync_object_dict["driver"] if "driver" in sync_object_dict else None
         return sync_object_dict["sync_object"], sync_driver
 
-    def task_executer(self, sync_object_name, params={}, countdown=0):
+    def task_executer(self, sync_object_name, params={}, countdown=0, first=True):
         if "continuous" not in params or not params["continuous"]:
             response = self.sync_task(sync_object_name, params)
             self.log(response["data"]["log"], params)
             return response
 
         params["url_diagnosis"] = self.get_diagnosis_url(params)
+        params["first"] = first
         app.tasks[sync_object_name].apply_async((sync_object_name, params,), countdown=countdown)
 
         return {"status": 200, "data": {"msg": "Tarea encolada correctamente"}, "countdown": countdown}
@@ -61,12 +63,15 @@ class TaskManager():
         sync_object = self.get_sync_object(sync_object_name, params)
         response = self.sync_task(sync_object_name, params, sync_object=sync_object)
 
+        first = params["first"] if "first" in params else False
+
+        if first:
+            params["first"] = False
+            time.sleep(3)
+
         activo = self.get_activo(sync_object.process_name, params)
         if activo:
-            if "first" in params and params["first"]:
-                params["first"] = False
-
-            self.task_executer(sync_object_name, params=params, countdown=response["countdown"])
+            self.task_executer(sync_object_name, params=params, countdown=response["countdown"], first=False)
         else:
             response["data"]["log"].append({
                 "msg_type": "Info",
