@@ -151,6 +151,14 @@
             {
                 "path": "controllers/base/magento2/tierprice/controllers/",
                 "name": "ctrl_base_magento2_tierprice__tierprice_upload.py"
+            },
+            {
+                "path": "controllers/base/magento2/inventory/serializers/",
+                "name": "ctrl_base_magento2_inventory__inventory_serializer.py"
+            },
+            {
+                "path": "controllers/base/magento2/inventory/controllers/",
+                "name": "ctrl_base_magento2_inventory__inventory_upload.py"
             }
         ]
     }
