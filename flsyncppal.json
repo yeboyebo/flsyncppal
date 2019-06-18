@@ -119,6 +119,22 @@
             {
                 "path": "controllers/base/magento2/products/serializers/",
                 "name": "ctrl_base_magento2_products__product_link_serializer.py"
+            },
+            {
+                "name": "ctrl_base_magento2_orders__orders_download.py",
+                "path": "controllers/base/magento2/orders/controllers/"
+            },
+            {
+                "name": "ctrl_base_magento2_orders__order_line_serializer.py",
+                "path": "controllers/base/magento2/orders/serializers/"
+            },
+            {
+                "name": "ctrl_base_magento2_orders__order_line_shipping_serializer.py",
+                "path": "controllers/base/magento2/orders/serializers/"
+            },
+            {
+                "name": "ctrl_base_magento2_orders__order_serializer.py",
+                "path": "controllers/base/magento2/orders/serializers/"
             }
         ]
     }
