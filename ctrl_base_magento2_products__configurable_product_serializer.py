@@ -21,6 +21,16 @@ class ConfigurableProductSerializer(DefaultSerializer):
             {"attribute_code": "tax_class_id", "value": "2"}
         ]
 
+        size_values = [{"value_index": size} for size in self.get_init_value("indice_tallas")]
+        extension_attributes = {
+            "configurable_product_options": [{
+                "attribute__id": 139,
+                "label": "Size",
+                "values": size_values
+            }]
+        }
+
         self.set_data_value("product//custom_attributes", custom_attributes)
+        self.set_data_value("product//extension_attributes", extension_attributes)
 
         return True

@@ -13,17 +13,27 @@ class SimpleProductSerializer(DefaultSerializer):
         self.set_string_value("product//sku", self.get_sku())
         self.set_string_value("product//attribute_set_id", "4")
         self.set_string_value("product//status", "1")
-        self.set_string_value("product//visibility", "1")
+
+        is_visibility = "1"
+        if  self.get_init_value("aa.talla") == "TU":
+            is_visibility = "4"
+
+        self.set_string_value("product//visibility", is_visibility)
         self.set_string_value("product//type_id", "simple")
 
-        self.set_string_value("product//extension_attributes//stock_item//qty", self.get_stock())
-        self.set_string_value("product//extension_attributes//stock_item//is_in_stock", "True")
+        cant_stock = self.get_stock()
+        is_in_stock = True
+        if cant_stock == 0:
+            is_in_stock = False
+
+        self.set_string_value("product//extension_attributes//stock_item//qty", cant_stock)
+        self.set_string_value("product//extension_attributes//stock_item//is_in_stock", is_in_stock)
 
         custom_attributes = [
             {"attribute_code": "description", "value": self.get_init_value("lsc.descripcion")},
             {"attribute_code": "tax_class_id", "value": "2"},
             {"attribute_code": "barcode", "value": self.get_init_value("aa.barcode")},
-            {"attribute_code": "size", "value": self.get_init_value("aa.talla")}
+            {"attribute_code": "size", "value": self.get_init_value("t.indice")}
         ]
 
         self.set_data_value("product//custom_attributes", custom_attributes)
