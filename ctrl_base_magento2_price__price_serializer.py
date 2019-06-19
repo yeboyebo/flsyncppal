@@ -4,6 +4,6 @@ from controllers.base.default.serializers.default_serializer import DefaultSeria
 class PriceSerializer(DefaultSerializer):
 
     def get_data(self):
-        self.set_string_relation("sku", "a.referencia")
+        self.set_string_relation("sku", "lsc.descripcion")
         self.set_string_relation("price", "a.pvp")
         return True

@@ -47,9 +47,9 @@ class TierpriceUpload(UploadSync, ABC):
         self.idlinea = idlinea
 
         q = qsatype.FLSqlQuery()
-        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, a.referencia, a.codtarifa, t.grupoclientesb2b")
+        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, t.grupoclientesb2b")
         q.setFrom("lineassincro_catalogo lsc INNER JOIN articulostarifas a ON lsc.idobjeto = CAST(a.id as varchar) INNER JOIN tarifas t ON a.codtarifa = t.codtarifa")
-        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, a.referencia, a.codtarifa, t.grupoclientesb2b".format(self.idlinea))
+        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, t.grupoclientesb2b".format(self.idlinea))
 
         q.exec_()
 
@@ -59,7 +59,7 @@ class TierpriceUpload(UploadSync, ABC):
         body = self.fetch_query(q)
         self.idsincro = body[0]["lsc.idsincro"]
         self.id = body[0]["lsc.idobjeto"]
-        self.referencia = body[0]["a.codtarifa"] + " - " + body[0]["a.referencia"]
+        self.referencia = body[0]["a.codtarifa"] + " - " + body[0]["lsc.descripcion"]
 
         return body
 

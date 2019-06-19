@@ -48,9 +48,9 @@ class PriceUpload(UploadSync, ABC):
         self.idlinea = idlinea
 
         q = qsatype.FLSqlQuery()
-        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, a.referencia")
+        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion")
         q.setFrom("lineassincro_catalogo lsc INNER JOIN articulostarifas a ON lsc.idobjeto = CAST(a.id as varchar) INNER JOIN tarifas t ON a.codtarifa = t.codtarifa")
-        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, a.referencia".format(self.idlinea))
+        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion".format(self.idlinea))
 
         q.exec_()
 
@@ -60,7 +60,7 @@ class PriceUpload(UploadSync, ABC):
         body = self.fetch_query(q)
         self.idsincro = body[0]["lsc.idsincro"]
         self.id = body[0]["lsc.idobjeto"]
-        self.referencia = body[0]["a.referencia"]
+        self.referencia = body[0]["lsc.descripcion"]
         self.error = False
 
         return body
