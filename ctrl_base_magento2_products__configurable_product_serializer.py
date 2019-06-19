@@ -16,7 +16,7 @@ class ConfigurableProductSerializer(DefaultSerializer):
         self.set_string_value("product//visibility", "4")
         self.set_string_value("product//type_id", "configurable")
 
-       large_description = self.get_init_value("a.mgdescripcion")
+        large_description = self.get_init_value("a.mgdescripcion")
         if large_description == False or large_description == "" or large_description == None or str(large_description) == "None":
             large_description = self.get_init_value("lsc.descripcion")
 
