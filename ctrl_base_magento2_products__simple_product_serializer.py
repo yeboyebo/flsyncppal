@@ -29,8 +29,18 @@ class SimpleProductSerializer(DefaultSerializer):
         self.set_string_value("product//extension_attributes//stock_item//qty", cant_stock)
         self.set_string_value("product//extension_attributes//stock_item//is_in_stock", is_in_stock)
 
+        large_description = self.get_init_value("a.mgdescripcion")
+        if large_description == False or large_description == "" or large_description == None or str(large_description) == "None":
+            large_description = self.get_init_value("lsc.descripcion")
+
+        short_description = self.get_init_value("a.mgdescripcioncorta")
+
+        if short_description == False or short_description == "" or short_description == None or str(short_description) == "None":
+            short_description = self.get_init_value("lsc.descripcion")
+
         custom_attributes = [
-            {"attribute_code": "description", "value": self.get_init_value("lsc.descripcion")},
+            {"attribute_code": "description", "value": large_description},
+            {"attribute_code": "short_description", "value": short_description},
             {"attribute_code": "tax_class_id", "value": "2"},
             {"attribute_code": "barcode", "value": self.get_init_value("aa.barcode")},
             {"attribute_code": "size", "value": self.get_init_value("t.indice")}

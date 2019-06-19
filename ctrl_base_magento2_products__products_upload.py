@@ -23,11 +23,13 @@ class ProductsUpload(UploadSync, ABC):
     idsincro = None
     referencia = None
     indice_tallas = None
+    stock_disponible = None
 
     def __init__(self, process_name, params=None):
         super().__init__(process_name, Magento2Driver(), params)
 
         self.indice_tallas = []
+        self.stock_disponible = False
 
     def get_data(self):
         data = self.get_db_data()
@@ -36,6 +38,7 @@ class ProductsUpload(UploadSync, ABC):
             return data
 
         data[0]["indice_tallas"] = self.indice_tallas
+        data[0]["stock_disponible"] = self.stock_disponible
         configurable_product = self.get_configurable_product_serializer().serialize(data[0])
         simple_products = []
         product_links = []
@@ -67,9 +70,9 @@ class ProductsUpload(UploadSync, ABC):
         self.idlinea = idlinea
 
         q = qsatype.FLSqlQuery()
-        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice")
+        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice, a.mgdescripcion, a.mgdescripcioncorta")
         q.setFrom("lineassincro_catalogo lsc INNER JOIN articulos a ON lsc.idobjeto = a.referencia INNER JOIN atributosarticulos aa ON a.referencia = aa.referencia INNER JOIN stocks s ON aa.barcode = s.barcode  INNER JOIN indicessincrocatalogo t ON aa.talla = t.valor")
-        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice".format(self.idlinea))
+        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice, a.mgdescripcion, a.mgdescripcioncorta".format(self.idlinea))
 
         q.exec_()
 
@@ -81,6 +84,8 @@ class ProductsUpload(UploadSync, ABC):
         self.referencia = body[0]["lsc.idobjeto"]
 
         for row in body:
+            if row["s.disponible"] > 0:
+                self.stock_disponible = True
             self.indice_tallas.append(row["t.indice"])
 
         return body

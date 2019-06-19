@@ -70,7 +70,7 @@ class DownloadSync(ConnectSync, ABC):
         data = {
             "customer_name": syncppal.iface.get_customer(),
             "process_name": self.process_name,
-            "error": str(exc),
+            "error": self.format_string(exc, max_characters=None),
             "pk": data[self.origin_field]
         }
 

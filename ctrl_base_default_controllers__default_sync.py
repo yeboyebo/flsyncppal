@@ -44,3 +44,21 @@ class DefaultSync(ABC):
             "process_name": self.process_name,
             "customer_name": syncppal.iface.get_customer()
         })
+
+    def format_string(self, string, max_characters=255, skip_replace=False):
+        if string is None or not string or string == "":
+            return string
+
+        string = str(string)
+
+        if not skip_replace:
+            string = string.replace("'", " ")
+            string = string.replace("º", " ")
+            string = string.replace("/", " ")
+            string = string.replace("\\", " ")
+            string = string.replace("\"", " ")
+            string = string.replace("\n", " ")
+            string = string.replace("\r", " ")
+            string = string.replace("\t", " ")
+
+        return string[:max_characters]
