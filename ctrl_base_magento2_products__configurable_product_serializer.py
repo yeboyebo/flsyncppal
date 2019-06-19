@@ -27,7 +27,8 @@ class ConfigurableProductSerializer(DefaultSerializer):
                 "attribute__id": 139,
                 "label": "Size",
                 "values": size_values
-            }]
+            }],
+            "stock_item": {"is_in_stock": self.get_init_value("stock_disponible")}
         }
 
         self.set_data_value("product//custom_attributes", custom_attributes)
