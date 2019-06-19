@@ -57,12 +57,11 @@ class InventoryUpload(UploadSync, ABC):
         
         self.referencia = body[0]["s.referencia"]
 
-        if q.value("s.disponible") > 0:
+        if body[0]["s.disponible"] > 0:
             body[0]["status"] = 1
         else:
+            body[0]["s.disponible"] = 0
             body[0]["status"] = 0
-
-        
 
         return body
 
