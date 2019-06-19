@@ -84,7 +84,7 @@ class ProductsUpload(UploadSync, ABC):
         self.referencia = body[0]["lsc.idobjeto"]
 
         for row in body:
-            if row["t.disponible"] > 0:
+            if row["s.disponible"] > 0:
                 self.stock_disponible = True
             self.indice_tallas.append(row["t.indice"])
 
