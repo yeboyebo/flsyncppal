@@ -2,7 +2,7 @@ from abc import ABC
 from YBLEGACY import qsatype
 
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
-from controllers.base.mirakl.controllers.orders_download import OrdersDownload
+from controllers.base.mirakl.orders.controllers.orders_download import OrdersDownload
 from controllers.base.mirakl.orders.serializers.ew_ventaseciweb_serializer import VentaseciwebSerializer
 from controllers.base.mirakl.orders.serializers.order_serializer import OrderSerializer
 
