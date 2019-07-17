@@ -203,6 +203,14 @@
             {
                 "name": "ctrl_base_mirakl_orders__cashcount_serializer.py",
                 "path": "controllers/base/mirakl/orders/serializers/"
+            },
+            {
+                "path": "controllers/base/mirakl/returns/controllers/",
+                "name": "ctrl_base_mirakl_returns__returns_download.py"
+            },
+            {
+                "path": "controllers/base/mirakl/returns/serializers/",
+                "name": "ctrl_base_mirakl_returns__ew_devolucioneseciweb_serializer.py"
             }
         ]
     }
