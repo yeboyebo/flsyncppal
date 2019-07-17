@@ -1,7 +1,7 @@
 from controllers.base.default.serializers.default_serializer import DefaultSerializer
 
 
-class EgOrderPaymentSerializer(DefaultSerializer):
+class OrderPaymentSerializer(DefaultSerializer):
 
     def get_data(self):
         idarqueo = self.get_init_value("idarqueo")

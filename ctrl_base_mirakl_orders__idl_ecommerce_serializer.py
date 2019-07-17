@@ -3,7 +3,7 @@ from YBLEGACY import qsatype
 from controllers.base.default.serializers.default_serializer import DefaultSerializer
 
 
-class IdlEcommerce(DefaultSerializer):
+class IdlEcommerceSerializer(DefaultSerializer):
 
     def get_data(self):
         shipping_method = self.get_init_value("shipping_type_label")

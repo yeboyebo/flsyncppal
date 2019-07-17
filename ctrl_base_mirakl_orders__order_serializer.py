@@ -11,7 +11,7 @@ from controllers.base.mirakl.orders.serializers.order_payment_serializer import 
 from controllers.base.mirakl.orders.serializers.idl_ecommerce_serializer import IdlEcommerceSerializer
 
 
-class EgOrderSerializer(DefaultSerializer):
+class OrderSerializer(DefaultSerializer):
 
     def get_data(self):
         # TMP. Comprobacion de si ya existe??
