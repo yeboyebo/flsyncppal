@@ -71,7 +71,7 @@ class ProductsUpload(UploadSync, ABC):
 
         q = qsatype.FLSqlQuery()
         q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice, a.mgdescripcion, a.mgdescripcioncorta")
-        q.setFrom("lineassincro_catalogo lsc INNER JOIN articulos a ON lsc.idobjeto = a.referencia INNER JOIN atributosarticulos aa ON a.referencia = aa.referencia INNER JOIN stocks s ON aa.barcode = s.barcode  INNER JOIN indicessincrocatalogo t ON aa.talla = t.valor")
+        q.setFrom("lineassincro_catalogo lsc INNER JOIN articulos a ON lsc.idobjeto = a.referencia INNER JOIN atributosarticulos aa ON a.referencia = aa.referencia LEFT JOIN stocks s ON aa.barcode = s.barcode INNER JOIN indicessincrocatalogo t ON aa.talla = t.valor")
         q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, lsc.descripcion, a.pvp, a.peso, aa.barcode, aa.talla, s.disponible, t.indice, a.mgdescripcion, a.mgdescripcioncorta".format(self.idlinea))
 
         q.exec_()
