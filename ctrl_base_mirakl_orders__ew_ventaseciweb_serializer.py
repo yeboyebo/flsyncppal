@@ -35,6 +35,6 @@ class VentaseciwebSerializer(DefaultSerializer):
             self.set_string_value("datosenvio", self.init_data, max_characters=None, skip_replace=True)
             self.set_data_value("infoclienterecibida", True)
             # crear venta antes y pasar el dato
-            self.set_data_relation("idtpv_comanda", "idtpv_comanda")
+            # self.set_data_relation("idtpv_comanda", "idtpv_comanda")
        
         return True
