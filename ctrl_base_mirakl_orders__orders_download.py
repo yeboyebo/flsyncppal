@@ -10,8 +10,8 @@ from models.flfact_tpv.objects.ew_ventaseciweb_raw import EwVentaseciweb
 
 class OrdersDownload(DownloadSync, ABC):
 
-    orders_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_update_date={}"
-    orders_test_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_update_date={}"
+    orders_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_date={}"
+    orders_test_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_date={}"
     
     fecha_sincro = ""
     esquema = "VENTAS_ECI_WEB"
@@ -52,10 +52,7 @@ class OrdersDownload(DownloadSync, ABC):
         else:
            self.fecha_sincro = "2000-01-01T00:00:01Z"
 
-        # Tmp. Para pruebas. Quitar en producción
-        self.fecha_sincro = "2000-01-01T00:00:01Z"
-
-        result = self.send_request("get", url=orders_url, replace=[self.fecha_sincro])
+        result = self.send_request("get", url=orders_url.format(self.fecha_sincro))
         return result
 
     def process_all_data(self, all_data):

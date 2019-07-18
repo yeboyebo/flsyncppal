@@ -11,8 +11,8 @@ from models.flfact_tpv.objects.egorder_raw import EgOrder
 
 class ShippingOrdersDownload(OrdersDownload, ABC):
 
-    orders_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
-    orders_test_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
+    shipping_url = "<host>/api/orders?order_state_codes=SHIPPING&order_ids={}"
+    shipping_test_url = "<host>/api/orders?order_state_codes=SHIPPING&order_ids={}"
 
     esquema = "SHIPPING_ECI_WEB"
     codtienda = "AEVV"
@@ -31,6 +31,14 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
 
     def get_vtaeci_model(self, data):
         return EwVentaseciweb(data)
+
+    def get_data(self):
+        shipping_url = self.shipping_url if self.driver.in_production else self.shipping_test_url
+
+        order_ids = self.get_order_ids()
+
+        result = self.send_request("get", url=shipping_url.format(",".join(order_ids)))
+        return result
 
     def process_data(self, data):
         if not data:
@@ -61,3 +69,18 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         eciweb.save()
 
         return True
+
+    def get_order_ids(self):
+        order_ids = []
+
+        q = qsatype.FLSqlQuery()
+        q.setSelect("idweb")
+        q.setFrom("ew_ventaseciweb")
+        q.setWhere("estado = 'WAITING_DEBIT'")
+
+        q.exec_()
+
+        while q.next():
+            order_ids.append(q.value(0))
+
+        return order_ids
