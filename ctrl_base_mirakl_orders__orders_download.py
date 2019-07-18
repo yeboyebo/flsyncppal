@@ -59,7 +59,7 @@ class OrdersDownload(DownloadSync, ABC):
         return result
 
     def process_all_data(self, all_data):
-        if all_data == []:
+        if all_data["orders"] == []:
             self.log("Éxito", "No hay datos que sincronizar")
             return False
 
