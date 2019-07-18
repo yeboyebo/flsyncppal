@@ -1,7 +1,6 @@
 from abc import ABC
 from YBLEGACY import qsatype
 
-from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 from controllers.base.mirakl.orders.controllers.orders_download import OrdersDownload
 from controllers.base.mirakl.orders.serializers.ew_ventaseciweb_serializer import VentaseciwebSerializer
 from controllers.base.mirakl.orders.serializers.order_serializer import OrderSerializer
@@ -15,8 +14,11 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
     orders_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
     orders_test_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
 
+    esquema = "SHIPPING_ECI_WEB"
+    codtienda = "AEVV"
+
     def __init__(self, process_name, params=None):
-        super().__init__(process_name, MiraklDriver(), params)
+        super().__init__(process_name, params)
 
     def get_order_serializer(self):
         return OrderSerializer()

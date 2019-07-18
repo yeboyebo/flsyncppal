@@ -22,7 +22,6 @@ class CashCountSerializer(DefaultSerializer):
         punto_venta = qsatype.FLUtil.sqlSelect("tpv_puntosventa", "codtpv_puntoventa", "codtienda = '{}'".format(self.get_codtienda()))
 
         self.set_string_value("codtienda", self.get_codtienda())
-        # TMP. codagente
         self.set_string_value("codtpv_agenteapertura", "0350")
         self.set_string_value("ptoventa", punto_venta, max_characters=6)
         self.set_string_value("diadesde", fecha)

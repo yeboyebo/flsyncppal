@@ -77,7 +77,8 @@ class OrdersDownload(DownloadSync, ABC):
             self.log("Error", "Falló al guardar fecha última sincro")
             return False
 
-        self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
+        if self.success_data:
+            self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
 
         return self.small_sleep
 

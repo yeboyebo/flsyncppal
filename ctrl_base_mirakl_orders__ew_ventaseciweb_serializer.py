@@ -27,7 +27,7 @@ class VentaseciwebSerializer(DefaultSerializer):
             self.set_string_value("fechaalta", now[:10])
             self.set_string_value("horaalta", now[-8:])
         else:
-            if qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "datosenvio", "idweb = '{}'".format(self.get_init_value("order_id"))):
+            if qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "datosenvio", "idweb = '{}'".format(self.get_init_value("order_id"))) and not qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "idtpv_comanda", "idweb = '{}'".format(self.get_init_value("order_id"))):
                 return False
 
             self.set_string_relation("idweb", "order_id")

@@ -14,17 +14,16 @@ from controllers.base.mirakl.orders.serializers.idl_ecommerce_serializer import 
 class OrderSerializer(DefaultSerializer):
 
     def get_data(self):
-        # TMP. Comprobacion de si ya existe??
+        codtienda = self.get_codtienda()
+        punto_venta = self.get_puntoventa()
+
+        self.set_string_value("codalmacen", "AWEB")
+        self.set_string_value("codtpv_puntoventa", punto_venta)
+        self.set_string_value("codtienda", codtienda)
 
         codigo = self.get_codigo()
         self.set_string_value("codigo", codigo, max_characters=15)
 
-        codtienda = self.get_codtienda()
-        self.set_string_value("codtpv_puntoventa", codtienda)
-        self.set_string_value("codalmacen", codtienda)
-        self.set_string_value("codtienda", codtienda)
-
-        # TMP. Codigo agente
         self.set_string_value("codtpv_agente", "0350")
 
         self.set_string_relation("coddivisa", "currency_iso_code")
@@ -34,7 +33,7 @@ class OrderSerializer(DefaultSerializer):
         self.set_data_value("tasaconv", 1)
         self.set_data_value("ptesincrofactura", True)
 
-        # iva = self.init_data["items"][-1]["iva"]
+        # iva = self.init_data["order_lines"][-1]["iva"]
         # neto = round(parseFloat(self.init_data["grand_total"] / ((100 + iva) / 100)), 2)
         # total_iva = self.init_data["grand_total"] - neto
 
@@ -74,7 +73,7 @@ class OrderSerializer(DefaultSerializer):
         self.set_string_value("codpago", self.get_codpago(), max_characters=10)
         self.set_string_value("egcodfactura", codigo, max_characters=12)
 
-        iva = self.init_data["items"][-1]["commission_rate_vat"]
+        iva = self.init_data["order_lines"][-1]["commission_rate_vat"]
 
         if "lines" not in self.data["children"]:
             self.data["children"]["lines"] = []
@@ -82,7 +81,7 @@ class OrderSerializer(DefaultSerializer):
         if "payments" not in self.data["children"]:
             self.data["children"]["payments"] = []
 
-        for item in self.init_data["items"]:
+        for item in self.init_data["order_lines"]:
             item.update({
                 "codcomanda": self.data["codigo"]
             })
@@ -122,6 +121,9 @@ class OrderSerializer(DefaultSerializer):
 
     def get_codtienda(self):
         return "AEVV"
+
+    def get_puntoventa(self):
+        return qsatype.FLUtil.sqlSelect("tpv_puntosventa", "codtpv_puntoventa", "codtienda = '{}'".format(self.get_codtienda()))
 
     def get_codserie(self):
         pais = self.data["codpais"]
@@ -163,7 +165,7 @@ class OrderSerializer(DefaultSerializer):
         return "TARJ"
 
     def get_codigo(self):
-        prefix = "AEVV"
+        prefix = self.data["codtpv_puntoventa"]
         ultima_vta = None
 
         id_ultima = qsatype.FLUtil.sqlSelect("tpv_comandas", "codigo", "codigo LIKE '{}%' ORDER BY codigo DESC LIMIT 1".format(prefix))
