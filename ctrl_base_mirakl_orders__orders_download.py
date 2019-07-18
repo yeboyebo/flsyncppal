@@ -65,7 +65,7 @@ class OrdersDownload(DownloadSync, ABC):
 
         for data in all_data["orders"]:
             try:
-                self.process_data(data):
+                self.process_data(data)
                 self.success_data.append(data)
             except Exception as e:
                 self.sync_error(data, e)
