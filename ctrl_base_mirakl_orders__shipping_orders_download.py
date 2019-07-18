@@ -7,6 +7,7 @@ from controllers.base.mirakl.orders.serializers.ew_ventaseciweb_serializer impor
 from controllers.base.mirakl.orders.serializers.order_serializer import OrderSerializer
 
 from models.flfact_tpv.objects.ew_ventaseciweb_raw import EwVentaseciweb
+from models.flfact_tpv.objects.egorder_raw import EgOrder
 
 
 class ShippingOrdersDownload(OrdersDownload, ABC):
@@ -20,6 +21,15 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
     def get_order_serializer(self):
         return OrderSerializer()
 
+    def get_vtaeci_serializer(self):
+        return VentaseciwebSerializer()
+
+    def get_order_model(self, data):
+        return EgOrder(data)
+
+    def get_vtaeci_model(self, data):
+        return EwVentaseciweb(data)
+
     def process_data(self, data):
         if not data:
             self.error_data.append(data)
@@ -32,7 +42,7 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         else:
             self.fecha_sincro = fecha
 
-        eciweb_data = VentaseciwebSerializer().serialize(data)
+        eciweb_data = self.get_vtaeci_serializer().serialize(data)
         if not eciweb_data:
             return
 
@@ -40,9 +50,12 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         if not order_data:
             return
 
-        order_data["children"]["vta_eci"] = eciweb_data
+        order = self.get_order_model(order_data)
+        order.save()
 
-        # order = EgOrder(order_data)
-        # order.save()
+        eciweb_data["idtpv_comanda"] = order.cursor.valueBuffer("idtpv_comanda")
+
+        eciweb = self.get_vtaeci_model(eciweb_data)
+        eciweb.save()
 
         return True

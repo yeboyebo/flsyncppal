@@ -18,6 +18,8 @@ class OrdersDownload(DownloadSync, ABC):
     def __init__(self, process_name, params=None):
         super().__init__(process_name, MiraklDriver(), params)
 
+        self.origin_field = "order_id"
+
     def process_data(self, data):
         if not data:
             self.error_data.append(data)
@@ -72,6 +74,8 @@ class OrdersDownload(DownloadSync, ABC):
         if not self.guarda_fechasincrotienda():
             self.log("Error", "Falló al guardar fecha última sincro")
             return False
+
+        self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
 
         return self.small_sleep
 
