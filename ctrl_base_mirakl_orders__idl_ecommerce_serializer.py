@@ -10,7 +10,7 @@ class IdlEcommerceSerializer(DefaultSerializer):
         self.set_string_value("tipo", "VENTA")
         self.set_string_value("transportista", "SEUR")
         self.set_string_value("metodoenvioidl", "B2C/STD", skip_replace=True)
-        self.set_data_value("imprimiralbaran", True)
+        self.set_data_value("imprimiralbaran", False)
         self.set_data_value("imprimirfactura", False)
         self.set_data_value("imprimirdedicatoria", False)
         self.set_data_value("emisor", None)
