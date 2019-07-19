@@ -10,7 +10,7 @@ class OrderShippingLineSerializer(DefaultSerializer):
         # dirnumenv = street[2] if len(street) >= 3 else ""
         # dirotrosenv = street[3] if len(street) >= 4 else ""
 
-        self.set_string_relation("mg_direccionenv", "customer//billing_address//street_1", max_characters=200)
+        self.set_string_relation("mg_direccionenv", "customer//shipping_address//street_1", max_characters=200)
         # self.set_string_value("mg_dirtipoviaenv", dirtipoviaenv, max_characters=100)
         # self.set_string_value("mg_dirnumenv", dirnumenv, max_characters=100)
         # self.set_string_value("mg_dirotrosenv", dirotrosenv, max_characters=100)
@@ -28,7 +28,7 @@ class OrderShippingLineSerializer(DefaultSerializer):
         self.set_string_relation("mg_apellidosenv", "customer//shipping_address//lastname", max_characters=200)
         self.set_string_relation("mg_codpostalenv", "customer//shipping_address//zip_code", max_characters=10)
         self.set_string_relation("mg_ciudadenv", "customer//shipping_address//city", max_characters=100)
-        self.set_string_relation("mg_paisenv", "customer//shipping_address//country_iso_code", max_characters=30)
+        self.set_string_value("mg_paisenv", "ES")
         self.set_string_relation("mg_telefonoenv", "customer//shipping_address//phone", max_characters=30)
 
         self.set_data_value("mg_confac", False)
