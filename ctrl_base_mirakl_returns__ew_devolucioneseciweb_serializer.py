@@ -4,7 +4,7 @@ from YBLEGACY.constantes import *
 from controllers.base.default.serializers.default_serializer import DefaultSerializer
 
 
-class VentaseciwebSerializer(DefaultSerializer):
+class DevolucioneseciwebSerializer(DefaultSerializer):
 
     def get_data(self):
         now = str(qsatype.Date())

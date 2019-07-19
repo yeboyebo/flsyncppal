@@ -3,11 +3,11 @@ from YBLEGACY import qsatype
 
 from controllers.base.default.controllers.download_sync import DownloadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
-from controllers.base.mirakl.orders.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
-from models.flfact_tpv.objects.ew_devolucioneseciweb_raw import EwDevollucioneseciweb
+from controllers.base.mirakl.returns.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
+from models.flfact_tpv.objects.ew_devolucioneseciweb_raw import EwDevolucioneseciweb
 from controllers.base.mirakl.orders.controllers.orders_download import OrdersDownload
 
-class OrdersDownload(DownloadSync, ABC):
+class ReturnsDownload(DownloadSync, ABC):
 
     # returns_url = "<host>/api/messages?start_date={}"
     # returns_test_url = "<testhost>/api/messages?start_date={}"
@@ -40,7 +40,7 @@ class OrdersDownload(DownloadSync, ABC):
             self.error_data.append(data)
             return False
 
-        devoleciweb = EwDevollucioneseciweb(eciweb_data)
+        devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
         if not self.masAccionesProcessData(eciweb_data):
@@ -84,6 +84,6 @@ class OrdersDownload(DownloadSync, ABC):
     def after_sync(self):
         if not OrdersDownload.guarda_fechasincrotienda(self.esquema, self.codtienda):
             self.log("Error", "Falló al guardar fecha última sincro")
-            return False
+            return self.small_sleep
 
         return self.small_sleep
