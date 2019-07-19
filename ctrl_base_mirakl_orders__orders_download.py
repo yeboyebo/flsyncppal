@@ -10,8 +10,8 @@ from models.flfact_tpv.objects.ew_ventaseciweb_raw import EwVentaseciweb
 
 class OrdersDownload(DownloadSync, ABC):
 
-    orders_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_update_date={}"
-    orders_test_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_update_date={}"
+    orders_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_date={}"
+    orders_test_url = "<host>/api/orders?order_state_codes=WAITING_ACCEPTANCE&start_date={}"
     
     fecha_sincro = ""
     esquema = "VENTAS_ECI_WEB"
@@ -19,6 +19,8 @@ class OrdersDownload(DownloadSync, ABC):
 
     def __init__(self, process_name, params=None):
         super().__init__(process_name, MiraklDriver(), params)
+
+        self.origin_field = "order_id"
 
     def process_data(self, data):
         if not data:
@@ -50,21 +52,18 @@ class OrdersDownload(DownloadSync, ABC):
         else:
            self.fecha_sincro = "2000-01-01T00:00:01Z"
 
-        # Tmp. Para pruebas. Quitar en producción
-        self.fecha_sincro = "2000-01-01T00:00:01Z"
-
-        result = self.send_request("get", url=orders_url, replace=[self.fecha_sincro])
+        result = self.send_request("get", url=orders_url.format(self.fecha_sincro))
         return result
 
     def process_all_data(self, all_data):
-        if all_data == []:
+        if all_data["orders"] == []:
             self.log("Éxito", "No hay datos que sincronizar")
             return False
 
         for data in all_data["orders"]:
             try:
-                if self.process_data(data):
-                    self.success_data.append(data)
+                self.process_data(data)
+                self.success_data.append(data)
             except Exception as e:
                 self.sync_error(data, e)
 
@@ -74,6 +73,9 @@ class OrdersDownload(DownloadSync, ABC):
         if not self.guarda_fechasincrotienda(self.esquema, self.codtienda):
             self.log("Error", "Falló al guardar fecha última sincro")
             return False
+
+        if self.success_data:
+            self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
 
         return self.small_sleep
 

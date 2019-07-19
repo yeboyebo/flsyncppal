@@ -27,14 +27,13 @@ class VentaseciwebSerializer(DefaultSerializer):
             self.set_string_value("fechaalta", now[:10])
             self.set_string_value("horaalta", now[-8:])
         else:
-            if qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "datosenvio", "idweb = '{}'".format(self.get_init_value("order_id"))):
+            if qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "datosenvio", "idweb = '{}'".format(self.get_init_value("order_id"))) and not qsatype.FLUtil.sqlSelect("ew_ventaseciweb", "idtpv_comanda", "idweb = '{}'".format(self.get_init_value("order_id"))):
                 return False
 
             self.set_string_relation("idweb", "order_id")
             self.set_string_value("estado", "SHIPPING")
             self.set_string_value("datosenvio", self.init_data, max_characters=None, skip_replace=True)
             self.set_data_value("infoclienterecibida", True)
-            # crear venta antes y pasar el dato
-            # self.set_data_relation("idtpv_comanda", "idtpv_comanda")
+            self.set_data_relation("idtpv_comanda", "idtpv_comanda")
        
         return True

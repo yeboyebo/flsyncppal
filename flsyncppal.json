@@ -211,6 +211,14 @@
             {
                 "path": "controllers/base/mirakl/returns/serializers/",
                 "name": "ctrl_base_mirakl_returns__ew_devolucioneseciweb_serializer.py"
+            },
+            {
+                "name": "ctrl_base_magento2_customers__customer_upload.py",
+                "path": "controllers/base/magento2/customers/controllers/"
+            },
+            {
+                "name": "ctrl_base_magento2_customers__customer_serializer.py",
+                "path": "controllers/base/magento2/customers/serializers/"
             }
         ]
     }

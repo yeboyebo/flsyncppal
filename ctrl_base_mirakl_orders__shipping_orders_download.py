@@ -1,24 +1,44 @@
 from abc import ABC
 from YBLEGACY import qsatype
 
-from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 from controllers.base.mirakl.orders.controllers.orders_download import OrdersDownload
 from controllers.base.mirakl.orders.serializers.ew_ventaseciweb_serializer import VentaseciwebSerializer
 from controllers.base.mirakl.orders.serializers.order_serializer import OrderSerializer
 
 from models.flfact_tpv.objects.ew_ventaseciweb_raw import EwVentaseciweb
+from models.flfact_tpv.objects.egorder_raw import EgOrder
 
 
 class ShippingOrdersDownload(OrdersDownload, ABC):
 
-    orders_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
-    orders_test_url = "<host>/api/orders?order_state_codes=SHIPPING&start_update_date={}"
+    shipping_url = "<host>/api/orders?order_state_codes=SHIPPING&order_ids={}"
+    shipping_test_url = "<host>/api/orders?order_state_codes=SHIPPING&order_ids={}"
+
+    esquema = "SHIPPING_ECI_WEB"
+    codtienda = "AEVV"
 
     def __init__(self, process_name, params=None):
-        super().__init__(process_name, MiraklDriver(), params)
+        super().__init__(process_name, params)
 
     def get_order_serializer(self):
         return OrderSerializer()
+
+    def get_vtaeci_serializer(self):
+        return VentaseciwebSerializer()
+
+    def get_order_model(self, data):
+        return EgOrder(data)
+
+    def get_vtaeci_model(self, data):
+        return EwVentaseciweb(data)
+
+    def get_data(self):
+        shipping_url = self.shipping_url if self.driver.in_production else self.shipping_test_url
+
+        order_ids = self.get_order_ids()
+
+        result = self.send_request("get", url=shipping_url.format(",".join(order_ids)))
+        return result
 
     def process_data(self, data):
         if not data:
@@ -32,7 +52,7 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         else:
             self.fecha_sincro = fecha
 
-        eciweb_data = VentaseciwebSerializer().serialize(data)
+        eciweb_data = self.get_vtaeci_serializer().serialize(data)
         if not eciweb_data:
             return
 
@@ -40,9 +60,27 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         if not order_data:
             return
 
-        order_data["children"]["vta_eci"] = eciweb_data
+        order = self.get_order_model(order_data)
+        order.save()
 
-        # order = EgOrder(order_data)
-        # order.save()
+        eciweb_data["idtpv_comanda"] = order.cursor.valueBuffer("idtpv_comanda")
+
+        eciweb = self.get_vtaeci_model(eciweb_data)
+        eciweb.save()
 
         return True
+
+    def get_order_ids(self):
+        order_ids = []
+
+        q = qsatype.FLSqlQuery()
+        q.setSelect("idweb")
+        q.setFrom("ew_ventaseciweb")
+        q.setWhere("estado = 'WAITING_DEBIT'")
+
+        q.exec_()
+
+        while q.next():
+            order_ids.append(q.value(0))
+
+        return order_ids
