@@ -14,7 +14,7 @@ class ReturnsDownload(DownloadSync, ABC):
     # Tmp. Para pruebas. Quitar en producción y activar las de arrriba
     returns_url = "https://marketplace.elcorteingles.es/api/messages"
     returns_test_url = "https://marketplace.elcorteingles.es/api/messages"
-    
+
     fecha_sincro = ""
     esquema = "DEVOLS_ECI_WEB"
     codtienda = "AEVV"
@@ -43,12 +43,12 @@ class ReturnsDownload(DownloadSync, ABC):
         devoleciweb.save()
 
         if not self.masAccionesProcessData(eciweb_data):
-        	return False
+            return False
 
         return True
 
     def masAccionesProcessData(self, eciweb_data):
-    	return True
+        return True
 
     def get_data(self):
         returns_url = self.returns_url if self.driver.in_production else self.returns_test_url
@@ -70,12 +70,13 @@ class ReturnsDownload(DownloadSync, ABC):
             self.log("Éxito", "No hay datos que sincronizar")
             return False
 
-        try:
-            if self.process_data(all_data):
-                self.success_data.append(all_data)
-        except Exception as e:
-            print("exception " + str(e))
-            self.sync_error(all_data, e)
+        for data in all_data["messages"]:
+            try:
+                if self.process_data(data):
+                    self.success_data.append(data)
+            except Exception as e:
+                print("exception " + str(e))
+                self.sync_error(data, e)
 
         return True
 
@@ -101,3 +102,4 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def dame_fechasincrotienda(self, esquema, codtienda):
         return qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "fechasincro || 'T' || horasincro || 'Z'", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
+
