@@ -75,7 +75,6 @@ class ReturnsDownload(DownloadSync, ABC):
                 if self.process_data(data):
                     self.success_data.append(data)
             except Exception as e:
-                print("exception " + str(e))
                 self.sync_error(data, e)
 
         return True
