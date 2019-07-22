@@ -12,8 +12,8 @@ class ReturnsDownload(DownloadSync, ABC):
     # returns_test_url = "<testhost>/api/messages?start_date={}"
 
     # Tmp. Para pruebas. Quitar en producción y activar las de arrriba
-    returns_url = "https://marketplace.elcorteingles.es/api/messages?start_date={}"
-    returns_test_url = "https://marketplace.elcorteingles.es/api/messages?start_date={}"
+    returns_url = "https://marketplace.elcorteingles.es/api/messages"
+    returns_test_url = "https://marketplace.elcorteingles.es/api/messages"
     
     fecha_sincro = ""
     esquema = "DEVOLS_ECI_WEB"
@@ -61,7 +61,6 @@ class ReturnsDownload(DownloadSync, ABC):
 
         # Tmp. Para pruebas. Quitar en producción
         self.fecha_sincro = "2000-01-01T00:00:01Z"
-
         result = self.send_request("get", url=returns_url, replace=[self.fecha_sincro])
 
         return result
