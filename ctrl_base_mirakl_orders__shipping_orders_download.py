@@ -37,6 +37,9 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
 
         order_ids = self.get_order_ids()
 
+        if not order_ids or order_ids == "NOIDS":
+            return {"orders": [], "total_count": 0}
+
         result = self.send_request("get", url=shipping_url.format(",".join(order_ids)))
         return result
 
@@ -82,5 +85,8 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
 
         while q.next():
             order_ids.append(q.value(0))
+
+        if order_ids == []:
+            return "NOIDS"
 
         return order_ids
