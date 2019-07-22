@@ -5,7 +5,6 @@ from controllers.base.default.controllers.download_sync import DownloadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 from controllers.base.mirakl.returns.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
 from models.flfact_tpv.objects.ew_devolucioneseciweb_raw import EwDevolucioneseciweb
-from controllers.base.mirakl.orders.controllers.orders_download import OrdersDownload
 
 class ReturnsDownload(DownloadSync, ABC):
 
@@ -54,7 +53,7 @@ class ReturnsDownload(DownloadSync, ABC):
     def get_data(self):
         returns_url = self.returns_url if self.driver.in_production else self.returns_test_url
 
-        fecha = OrdersDownload.dame_fechasincrotienda(self.esquema, self.codtienda)
+        fecha = self.dame_fechasincrotienda(self.esquema, self.codtienda)
         if fecha and fecha != "None" and fecha != "":
            self.fecha_sincro = fecha
         else:
@@ -82,8 +81,24 @@ class ReturnsDownload(DownloadSync, ABC):
         return True
 
     def after_sync(self):
-        if not OrdersDownload.guarda_fechasincrotienda(self.esquema, self.codtienda):
+        if not self.guarda_fechasincrotienda(self.esquema, self.codtienda):
             self.log("Error", "Falló al guardar fecha última sincro")
             return self.small_sleep
 
         return self.small_sleep
+
+    def guarda_fechasincrotienda(self, esquema, codtienda):
+        fecha = str(self.fecha_sincro)[:10]
+        hora = str(self.fecha_sincro)[11:19]
+
+        idsincro = qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "id", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
+
+        if idsincro:
+            qsatype.FLSqlQuery().execSql("UPDATE tpv_fechasincrotienda SET fechasincro = '{}', horasincro = '{}' WHERE id = {}".format(fecha, hora, idsincro))
+        else:
+            qsatype.FLSqlQuery().execSql("INSERT INTO tpv_fechasincrotienda (codtienda, esquema, fechasincro, horasincro) VALUES ('{}', '{}', '{}', '{}')".format(codtienda, esquema, fecha, hora))
+
+        return True
+
+    def dame_fechasincrotienda(self, esquema, codtienda):
+        return qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "fechasincro || 'T' || horasincro || 'Z'", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
