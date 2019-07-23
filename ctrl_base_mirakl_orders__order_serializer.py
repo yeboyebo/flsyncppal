@@ -71,7 +71,7 @@ class OrderSerializer(DefaultSerializer):
         self.set_string_value("codejercicio", self.get_codejercicio())
         self.set_string_value("hora", self.get_hora())
         self.set_string_value("codpago", self.get_codpago(), max_characters=10)
-        self.set_string_value("egcodfactura", codigo, max_characters=12)
+        self.set_string_value("egcodfactura", "")
 
         iva = self.init_data["order_lines"][-1]["commission_rate_vat"]
 
