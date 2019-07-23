@@ -48,9 +48,9 @@ class CustomerUpload(UploadSync, ABC):
         self.idlinea = idlinea
 
         q = qsatype.FLSqlQuery()
-        q.setSelect("lsc.id, lsc.idobjeto, c.nombre, b2b.cifnif, b2b.email, b2b.codtarifa, dc.provincia, dc.codpais, dc.codpostal, dc.ciudad, dc.direccion, c.telefono1, c.cifnif, gcb2b.idgrupoclienteb2b, c.nombrecomercial, md5(c.cifnif), b2b.idstore, b2b.idclientemagento")
+        q.setSelect("lsc.id, lsc.idobjeto, c.nombre, b2b.cifnif, b2b.email, b2b.codtarifa, dc.provincia, dc.codpais, dc.codpostal, dc.ciudad, dc.direccion, c.telefono1, c.cifnif, gcb2b.idgrupoclienteb2b, c.nombrecomercial, md5(c.cifnif), b2b.idstore, b2b.idclientemagento, dc.dirtipovia, dc.dirotros")
         q.setFrom("lineassincro_catalogo lsc INNER JOIN clientesb2b b2b ON lsc.idobjeto = b2b.codcliente INNER JOIN clientes c ON b2b.codcliente = c.codcliente INNER JOIN dirclientes dc ON c.codcliente = dc.codcliente INNER JOIN gruposclientes gc ON c.codgrupo = gc.codgrupo INNER JOIN tarifas tf ON gc.codtarifa = tf.codtarifa INNER JOIN gruposclienteb2b gcb2b ON tf.idgrupoclienteb2b = gcb2b.id")
-        q.setWhere("lsc.id = {} AND lsc.sincronizado = false AND b2b.activo AND dc.domenvio GROUP BY lsc.id, lsc.idobjeto, c.nombre, b2b.cifnif, b2b.email, b2b.codtarifa, dc.provincia, dc.codpais, dc.codpostal, dc.ciudad, dc.direccion, c.telefono1, c.cifnif, gcb2b.idgrupoclienteb2b, c.nombrecomercial, b2b.idstore, b2b.idclientemagento".format(self.idlinea))
+        q.setWhere("lsc.id = {} AND lsc.sincronizado = false AND b2b.activo AND dc.domenvio GROUP BY lsc.id, lsc.idobjeto, c.nombre, b2b.cifnif, b2b.email, b2b.codtarifa, dc.provincia, dc.codpais, dc.codpostal, dc.ciudad, dc.direccion, c.telefono1, c.cifnif, gcb2b.idgrupoclienteb2b, c.nombrecomercial, b2b.idstore, b2b.idclientemagento, dc.dirtipovia, dc.dirotros".format(self.idlinea))
 
         q.exec_()
 

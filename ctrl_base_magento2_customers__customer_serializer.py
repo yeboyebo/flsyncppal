@@ -25,6 +25,7 @@ class CustomerSerializer(DefaultSerializer):
         if str(self.get_init_value("c.nombrecomercial")) != "None" and str(self.get_init_value("c.nombrecomercial")) != "":
             nombre_comercial = str(self.get_init_value("c.nombrecomercial"))
 
+        direccion = self.get_init_value("dc.dirtipovia") + " " + self.get_init_value("dc.direccion") + " " + self.get_init_value("dc.dirotros") 
         addresses = [
             {"defaultBilling": True,
             "defaultShipping": True,
@@ -36,7 +37,7 @@ class CustomerSerializer(DefaultSerializer):
             "countryId": self.get_init_value("dc.codpais"),
             "postcode": self.get_init_value("dc.codpostal"),
             "city": self.get_init_value("dc.ciudad"),
-            "street": [self.get_init_value("dc.direccion")],
+            "street": [direccion],
             "telephone": self.get_init_value("c.telefono1"),
             "vat_id": self.get_init_value("c.cifnif"),
             "company": nombre_comercial}
