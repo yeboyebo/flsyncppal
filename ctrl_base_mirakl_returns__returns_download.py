@@ -8,12 +8,8 @@ from models.flfact_tpv.objects.ew_devolucioneseciweb_raw import EwDevolucionesec
 
 class ReturnsDownload(DownloadSync, ABC):
 
-    # returns_url = "<host>/api/messages?start_date={}"
-    # returns_test_url = "<testhost>/api/messages?start_date={}"
-
-    # Tmp. Para pruebas. Quitar en producción y activar las de arrriba
-    returns_url = "https://marketplace.elcorteingles.es/api/messages"
-    returns_test_url = "https://marketplace.elcorteingles.es/api/messages"
+    returns_url = "<host>/api/messages?start_date={}"
+    returns_test_url = "<testhost>/api/messages?start_date={}"
 
     fecha_sincro = ""
     esquema = "DEVOLS_ECI_WEB"
@@ -21,6 +17,8 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def __init__(self, process_name, params=None):
         super().__init__(process_name, MiraklDriver(), params)
+
+        self.origin_field = "order_id"
 
     def process_data(self, data):
         if not data:
@@ -39,11 +37,17 @@ class ReturnsDownload(DownloadSync, ABC):
             self.error_data.append(data)
             return False
 
+        if qsatype.FLUtil.sqlSelect("ew_devolucioneseciweb", "idventaweb", "idventaweb = '{}'".format(eciweb_data["idventaweb"])):
+            self.log("Error", "La venta {} ya ha sido procesada".format(eciweb_data["idventaweb"]))
+            return True
+
+        idComanda = self.masAccionesProcessData(eciweb_data)
+        if not idComanda:
+            raise NameError("No se pudo crear la devolución")
+
+        eciweb_data["idtpv_comanda"] = idComanda
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
-
-        if not self.masAccionesProcessData(eciweb_data):
-            return False
 
         return True
 
@@ -55,12 +59,12 @@ class ReturnsDownload(DownloadSync, ABC):
 
         fecha = self.dame_fechasincrotienda(self.esquema, self.codtienda)
         if fecha and fecha != "None" and fecha != "":
-           self.fecha_sincro = fecha
+            self.fecha_sincro = fecha
         else:
-           self.fecha_sincro = "2000-01-01T00:00:01Z"
+            self.fecha_sincro = "2000-01-01T00:00:01Z"
 
         # Tmp. Para pruebas. Quitar en producción
-        self.fecha_sincro = "2000-01-01T00:00:01Z"
+        #self.fecha_sincro = "2000-01-01T00:00:01Z"
         result = self.send_request("get", url=returns_url, replace=[self.fecha_sincro])
 
         return result
@@ -101,4 +105,3 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def dame_fechasincrotienda(self, esquema, codtienda):
         return qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "fechasincro || 'T' || horasincro || 'Z'", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
-
