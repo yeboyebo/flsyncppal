@@ -19,13 +19,16 @@ class WebDriver(DefaultDriver, ABC):
         self.success_code = 200
         self.session = requests.Session()
 
-    def send_request(self, request_type, url=None, data=None, replace=[], success_code=None):
+    def send_request(self, request_type, url=None, data=None, replace=[], success_code=None, file=None):
         url = url if url else self.get_url(replace)
         headers = self.get_headers()
 
         response = None
 
-        if request_type == "get":
+        if file:
+            del headers["Content-Type"]
+            response = self.session.post(url, headers=headers, files={"file": open(file, "rb")})
+        elif request_type == "get":
             response = self.session.get(url, headers=headers, data=data)
         elif request_type == "post":
             response = self.session.post(url, headers=headers, data=data)

@@ -47,9 +47,9 @@ class TierpriceUpload(UploadSync, ABC):
         self.idlinea = idlinea
 
         q = qsatype.FLSqlQuery()
-        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, t.grupoclientesb2b")
-        q.setFrom("lineassincro_catalogo lsc INNER JOIN articulostarifas a ON lsc.idobjeto = CAST(a.id as varchar) INNER JOIN tarifas t ON a.codtarifa = t.codtarifa")
-        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, t.grupoclientesb2b".format(self.idlinea))
+        q.setSelect("lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, gcb2b.grupoclientesb2b")
+        q.setFrom("lineassincro_catalogo lsc INNER JOIN articulostarifas a ON lsc.idobjeto = CAST(a.id as varchar) INNER JOIN tarifas t ON a.codtarifa = t.codtarifa INNER JOIN gruposclienteb2b gcb2b ON t.idgrupoclienteb2b = gcb2b.id")
+        q.setWhere("lsc.id = {} GROUP BY lsc.id, lsc.idsincro, lsc.idobjeto, a.pvp, lsc.descripcion, a.codtarifa, gcb2b.grupoclientesb2b".format(self.idlinea))
 
         q.exec_()
 

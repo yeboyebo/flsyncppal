@@ -1,5 +1,4 @@
 from abc import ABC
-import csv
 import os
 from YBLEGACY import qsatype
 
@@ -7,14 +6,10 @@ from controllers.base.default.controllers.upload_sync import UploadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 
 
-class UploadOffers(UploadSync, ABC):
+class OffersUpload(UploadSync, ABC):
 
-    # returns_url = "<host>/api/offers/imports"
-    # returns_test_url = "<testhost>/api/offers/imports"
-
-    # Tmp. Para pruebas. Quitar en producción y activar las de arrriba
-    offers_url = "https://marketplace.elcorteingles.es/api/offers/imports"
-    offers_test_url = "https://marketplace.elcorteingles.es/api/offers/imports"
+    offers_url = "<host>/api/offers/imports"
+    offers_test_url = "<testhost>/api/offers/imports"
 
     def __init__(self, process_name, params=None):
         super().__init__(process_name, MiraklDriver(), params)
@@ -25,12 +20,12 @@ class UploadOffers(UploadSync, ABC):
             return data
 
         print("Data:", data)
-        with open('students.csv', 'w') as csvfile:
+        with open("students.csv", "w") as csvfile:
             csvfile.write("\"sku\";\"quantity\"\n")
             for r in range(len(data)):
                 csvfile.write(str(data[r][0]) + ";" + str(data[r][1]))
 
-        file = open('students.csv', 'r')
+        file = open("students.csv", "r")
         print("//FILE: ", file.read())
 
         return file
@@ -62,8 +57,8 @@ class UploadOffers(UploadSync, ABC):
 
     def send_data(self, data):
         print("SENDATA: ", data.read())
-        self.send_request("post", url=self.offers_url, data=data)
-        os.remove('students.csv')
+        self.send_request("post", url=self.offers_url, data=data, file="students.csv")
+        os.remove("students.csv")
 
     def dameCantidadDisponibleARestar(self):
         return 2
