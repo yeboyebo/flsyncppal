@@ -19,14 +19,12 @@ class OffersUpload(UploadSync, ABC):
         if data == []:
             return data
 
-        print("Data:", data)
         with open("students.csv", "w") as csvfile:
             csvfile.write("\"sku\";\"quantity\"\n")
             for r in range(len(data)):
                 csvfile.write(str(data[r][0]) + ";" + str(data[r][1]))
 
         file = open("students.csv", "r")
-        print("//FILE: ", file.read())
 
         return file
 
@@ -56,12 +54,17 @@ class OffersUpload(UploadSync, ABC):
         return body
 
     def send_data(self, data):
-        print("SENDATA: ", data.read())
-        self.send_request("post", url=self.offers_url, data=data, file="students.csv")
+        data = {"import_mode": "PARTIAL_UPDATE"}
+        resul = self.send_request("post", url=self.offers_url, data=data, file="students.csv", success_code=201)
         os.remove("students.csv")
+
+        return resul
 
     def dameCantidadDisponibleARestar(self):
         return 2
 
-    def after_sync(self):
-        pass
+    def after_sync(self, response_data=None):
+        if response_data and "import_id" in response_data:
+            self.log("Éxito", "Stock sincronizado correctamente: {}".format(response_data["import_id"]))
+
+        return self.small_sleep

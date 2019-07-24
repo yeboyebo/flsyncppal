@@ -27,7 +27,7 @@ class WebDriver(DefaultDriver, ABC):
 
         if file:
             del headers["Content-Type"]
-            response = self.session.post(url, headers=headers, files={"file": open(file, "rb")})
+            response = self.session.post(url, headers=headers, data=data, files={"file": open(file, "rb")})
         elif request_type == "get":
             response = self.session.get(url, headers=headers, data=data)
         elif request_type == "post":
