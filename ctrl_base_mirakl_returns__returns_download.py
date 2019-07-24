@@ -46,6 +46,7 @@ class ReturnsDownload(DownloadSync, ABC):
             raise NameError("No se pudo crear la devolución")
 
         eciweb_data["idtpv_comanda"] = idComanda
+        eciweb_data["datosdevol"] = data["body"]
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
@@ -65,7 +66,7 @@ class ReturnsDownload(DownloadSync, ABC):
 
         # Tmp. Para pruebas. Quitar en producción
         #self.fecha_sincro = "2000-01-01T00:00:01Z"
-        result = self.send_request("get", url=returns_url, replace=[self.fecha_sincro])
+        result = self.send_request("get", url=returns_url.format(self.fecha_sincro))
 
         return result
 
