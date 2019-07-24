@@ -46,6 +46,7 @@ class ReturnsDownload(DownloadSync, ABC):
             raise NameError("No se pudo crear la devolución")
 
         eciweb_data["idtpv_comanda"] = idComanda
+        eciweb_data["datosdevol"] = data["body"]
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
