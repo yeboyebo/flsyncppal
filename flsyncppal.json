@@ -219,6 +219,10 @@
             {
                 "name": "ctrl_base_magento2_customers__customer_serializer.py",
                 "path": "controllers/base/magento2/customers/serializers/"
+            },
+            {
+                "path": "controllers/base/mirakl/offers/controllers/",
+                "name": "ctrl_base_mirakl_offers__offers_upload.py"
             }
         ]
     }

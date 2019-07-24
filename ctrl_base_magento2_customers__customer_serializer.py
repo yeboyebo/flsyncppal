@@ -5,7 +5,6 @@ class CustomerSerializer(DefaultSerializer):
 
     def get_data(self):
 
-        print("Cliente Magento: ", str(self.get_init_value("b2b.idclientemagento")))
         if str(self.get_init_value("b2b.idclientemagento")) != "" and str(self.get_init_value("b2b.idclientemagento")) != "None":
             self.serializador_actualizar_cliente()
             return True
@@ -22,25 +21,28 @@ class CustomerSerializer(DefaultSerializer):
         self.set_string_relation("customer//group_id", "gcb2b.idgrupoclienteb2b")
         self.set_data_value("customer//website_id", 0)
 
+        nombre_comercial = ""
+        if str(self.get_init_value("c.nombrecomercial")) != "None" and str(self.get_init_value("c.nombrecomercial")) != "":
+            nombre_comercial = str(self.get_init_value("c.nombrecomercial"))
+
+        direccion = self.get_init_value("dc.dirtipovia") + " " + self.get_init_value("dc.direccion") + " " + self.get_init_value("dc.dirotros") 
         addresses = [
             {"defaultBilling": True,
             "defaultShipping": True,
             "firstname": nombre_cliente,
             "lastname": apellido_cliente,
             "region": {
-                "regionCode": "NY",
-                "regionId": self.get_init_value("pv.mg_idprovincia"),
                 "region": self.get_init_value("dc.provincia")
             },
             "countryId": self.get_init_value("dc.codpais"),
             "postcode": self.get_init_value("dc.codpostal"),
             "city": self.get_init_value("dc.ciudad"),
-            "street": [self.get_init_value("dc.direccion")],
+            "street": [direccion],
             "telephone": self.get_init_value("c.telefono1"),
             "vat_id": self.get_init_value("c.cifnif"),
-            "company": self.get_init_value("c.nombrecomercial")}
+            "company": nombre_comercial}
         ]
-        print("Cifnif: ", str(self.get_init_value("md5(c.cifnif)"))[0:7])
+
         self.set_data_value("customer//addresses", addresses)
         self.set_string_value("password", "A" + str(self.get_init_value("md5(c.cifnif)"))[0:7])
 
