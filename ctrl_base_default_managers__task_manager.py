@@ -13,7 +13,7 @@ class TaskManager():
 
     sync_object_dict = None
 
-    def __init__(self, sync_object_dict):
+    def __init__(self, sync_object_dict={}):
         self.sync_object_dict = sync_object_dict
 
         globalValues.registrarmodulos()
