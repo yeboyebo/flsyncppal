@@ -24,7 +24,7 @@ class flsyncppal(interna):
 
         qsatype.FLSqlQuery().execSql("DELETE FROM yb_log WHERE cliente = '{}' AND tipo = '{}' AND timestamp < '{}'".format(customer, process, tsDel), "yeboyebo")
 
-        grupoprocesos = qsatype.FLUtil.sqlSelect("yb_procesos", "grupoprocesos", "cliente = '{}' AND proceso = '{}'".format(customer, process))
+        grupoprocesos = qsatype.FLUtil.sqlSelect("yb_procesos", "grupoprocesos", "cliente = '{}' AND proceso = '{}'".format(customer, process), "yeboyebo")
 
         qsatype.FLSqlQuery().execSql("INSERT INTO yb_log (texto, cliente, tipo, grupoprocesos, timestamp) VALUES ('{}', '{}', '{}', '{}', '{}')".format(text, customer, process, grupoprocesos, tmstmp), "yeboyebo")
 
