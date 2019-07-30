@@ -71,7 +71,10 @@ class OffersUpload(UploadSync, ABC):
         return resul
 
     def get_disponible_a_restar(self):
-        return 2
+        cant = qsatype.FLUtil.sqlSelect("param_parametros", "valor", "nombre = 'SEGURIDAD_STOCK'")
+        if not cant or cant == None or str(cant) == "None":
+            cant = 0
+        return cant
 
     def after_sync(self, response_data=None):
         if response_data and "import_id" in response_data:
