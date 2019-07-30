@@ -71,7 +71,7 @@ class ReturnsDownload(DownloadSync, ABC):
         return result
 
     def process_all_data(self, all_data):
-        if all_data == []:
+        if all_data == ["messages"]:
             self.log("Éxito", "No hay datos que sincronizar")
             return False
 
@@ -89,7 +89,7 @@ class ReturnsDownload(DownloadSync, ABC):
             self.log("Error", "Falló al guardar fecha última sincro")
             return self.small_sleep
 
-        return self.small_sleep
+        return self.large_sleep
 
     def guarda_fechasincrotienda(self, esquema, codtienda):
         fecha = str(self.fecha_sincro)[:10]
