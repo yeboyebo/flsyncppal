@@ -25,6 +25,9 @@ class ReturnsDownload(DownloadSync, ABC):
             self.error_data.append(data)
             return False
 
+        if data["subject"] != "Devolución artículo":
+            return False
+
         fecha = data["date_created"]
         if self.fecha_sincro != "":
             if fecha > self.fecha_sincro:
