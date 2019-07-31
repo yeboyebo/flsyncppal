@@ -20,7 +20,7 @@ class flsyncppal(interna):
         headers = {"Content-Type": "application/json"}
         a_text = text.split(". ")
         logs = {"log": [{
-            "msg_type": a_text[0] if len(a_text) else "Error"
+            "msg_type": a_text[0] if len(a_text) else "Error",
             "msg": ". ".join(a_text[1:]) if len(a_text) else "Log incorrecto",
             "process_name": process,
             "customer_name": self.get_customer()
