@@ -11,6 +11,10 @@ class interna(qsatype.objetoBase):
 
 
 # @class_declaration flsyncppal #
+import requests
+import json
+
+
 class flsyncppal(interna):
 
     def flsyncppal_get_customer(self):
