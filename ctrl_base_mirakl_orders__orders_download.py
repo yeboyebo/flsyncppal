@@ -72,12 +72,12 @@ class OrdersDownload(DownloadSync, ABC):
     def after_sync(self):
         if not self.guarda_fechasincrotienda(self.esquema, self.codtienda):
             self.log("Error", "Falló al guardar fecha última sincro")
-            return False
+            return self.small_sleep
 
         if self.success_data:
             self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
 
-        return self.small_sleep
+        return self.large_sleep
 
     def guarda_fechasincrotienda(self, esquema, codtienda):
         fecha = str(self.fecha_sincro)[:10]
