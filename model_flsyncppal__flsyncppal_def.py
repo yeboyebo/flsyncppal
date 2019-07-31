@@ -17,14 +17,27 @@ class flsyncppal(interna):
         return "flsyncppal"
 
     def flsyncppal_log(self, text, process):
-        tmstmp = qsatype.Date().now()
-        tsDel = qsatype.FLUtil.addDays(tmstmp, -5)
+        headers = {"Content-Type": "application/json"}
+        a_text = text.split(". ")
+        logs = {"log": [{
+            "msg_type": a_text[0] if len(a_text) else "Error"
+            "msg": ". ".join(a_text[1:]) if len(a_text) else "Log incorrecto",
+            "process_name": process,
+            "customer_name": self.get_customer()
+        }]}
 
-        customer = self.get_customer()
+        url = "{}/api/diagnosis/log/append".format(self.get_diagnosis_url())
 
-        qsatype.FLSqlQuery().execSql("DELETE FROM yb_log WHERE cliente = '{}' AND tipo = '{}' AND timestamp < '{}'".format(customer, process, tsDel), "yeboyebo")
+        try:
+            response = requests.post(url, headers=headers, data=json.dumps(logs))
+            if response.status_code != 200:
+                raise NameError("Error. No se pudo escribir en el log")
+        except Exception:
+            print("Error. No se pudo escribir en el log")
+            return False
 
-        qsatype.FLSqlQuery().execSql("INSERT INTO yb_log (texto, cliente, tipo, grupoprocesos, timestamp) VALUES ('{}', '{}', '{}', (select grupoprocesos from yb_procesos where proceso = '{}'), '{}')".format(text, customer, process, process, tmstmp), "yeboyebo")
+    def get_diagnosis_url(self):
+        return "https://diagnosis.yeboyebo.es" if qsatype.FLUtil.isInProd() else "http://127.0.0.1:9000"
 
     def flsyncppal_replace(self, string):
         if string is None or not string or string == "":
