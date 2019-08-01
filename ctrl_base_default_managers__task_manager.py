@@ -91,7 +91,7 @@ class TaskManager():
 
         return "http://127.0.0.1:9000"
 
-    def log(self, logs, params={}):
+    def log(self, logs, params={}, retry=False):
         headers = {"Content-Type": "application/json"}
         logs = {"log": logs}
 
@@ -102,18 +102,28 @@ class TaskManager():
             if response.status_code != 200:
                 raise NameError("Error. No se pudo escribir en el log")
         except Exception:
-            print("Error. No se pudo escribir en el log")
-            return False
+            if retry:
+                print("Error. No se pudo escribir en el log")
+                return False
+            else:
+                print("Sin conexión. No se pudo escribir en el log. Probando en 60 segundos")
+                time.sleep(60)
+                return self.log(logs, params, retry=True)
 
-    def get_activo(self, process_name, params={}):
+    def get_activo(self, process_name, params={}, retry=False):
         url = "{}/api/diagnosis/process/isactive/{}".format(self.get_diagnosis_url(params), process_name)
 
         try:
             response = requests.get(url)
             return response.json()["active"]
         except Exception:
-            print("Error. No se pudo recibir el estado del proceso")
-            return False
+            if retry:
+                print("Error. No se pudo recibir el estado del proceso")
+                return False
+            else:
+                print("Sin conexión. No se pudo recibir el estado del proceso. Probando en 60 segundos")
+                time.sleep(60)
+                return self.get_activo(process_name, params, retry=True)
 
     def get_activity(self):
         i = app.control.inspect()
