@@ -1,6 +1,9 @@
 from YBLEGACY import qsatype
 from YBLEGACY.constantes import *
 
+from datetime import datetime
+import time
+
 from controllers.base.default.serializers.default_serializer import DefaultSerializer
 
 from controllers.base.mirakl.orders.serializers.order_line_serializer import OrderLineSerializer
@@ -45,17 +48,20 @@ class OrderSerializer(DefaultSerializer):
         # self.set_string_relation("email", "email", max_characters=100)
         # self.set_string_relation("codtarjetapuntos", "card_points", max_characters=15)
         # self.set_string_relation("cifnif", "cif", max_characters=20, default="-")
-        self.set_string_relation("fecha", "created_date", max_characters=10)
+        utcCreatedDtate = datetime.strptime(self.get_init_value("created_date"), '%Y-%m-%dT%H:%M:%SZ')
+        localCreatedDate = self.utcToLocal(utcCreatedDtate)
+        fecha = str(localCreatedDate)[:10]
+        hora = str(localCreatedDate)[-8:]
+        self.set_string_value("fecha", fecha)
+        self.set_string_value("hora", hora)
 
         self.set_string_relation("codpostal", "customer//billing_address//zip_code", max_characters=10)
         self.set_string_relation("ciudad", "customer//billing_address//city", max_characters=100)
         # self.set_string_relation("provincia", "customer//billing_address//region", max_characters=100)
         self.set_string_relation("codpais", "customer//billing_address//country_iso_code", max_characters=100)
         self.set_string_relation("telefono1", "customer//billing_address//phone", max_characters=30)
-
         nombrecliente = "{} {}".format(self.get_init_value("customer//billing_address//firstname"), self.get_init_value("customer//billing_address//lastname"))
         self.set_string_value("nombrecliente", nombrecliente, max_characters=100)
-
         # street = self.get_init_value("customer//billing_address//street_1").split("\n")
         # dirtipovia = street[0] if len(street) >= 1 else ""
         # direccion = street[1] if len(street) >= 2 else ""
@@ -68,13 +74,11 @@ class OrderSerializer(DefaultSerializer):
         # self.set_string_value("dirotros", dirotros, max_characters=100)
 
         self.set_string_value("codserie", self.get_codserie())
-        self.set_string_value("codejercicio", self.get_codejercicio())
-        self.set_string_value("hora", self.get_hora())
+        codejercicio = fecha[:4]
+        self.set_string_value("codejercicio", codejercicio)
         self.set_string_value("codpago", self.get_codpago(), max_characters=10)
         self.set_string_value("egcodfactura", "")
-
         iva = self.init_data["order_lines"][-1]["commission_rate_vat"]
-
         if "lines" not in self.data["children"]:
             self.data["children"]["lines"] = []
 
@@ -156,7 +160,9 @@ class OrderSerializer(DefaultSerializer):
         return splitted_date[0]
 
     def get_hora(self):
-        hour = self.get_init_value("created_date")[-9:-1]
+        utcCreatedDtate = self.get_init_value("created_date")
+        localCreatedDate = utcToLocal(utcCreatedDtate)
+        
         hour = "23:59:59" if hour == "00:00:00" else hour
 
         return hour
@@ -178,3 +184,8 @@ class OrderSerializer(DefaultSerializer):
         ultima_vta = ultima_vta + 1
 
         return "{}{}".format(prefix, qsatype.FactoriaModulos.get("flfactppal").iface.cerosIzquierda(str(ultima_vta), 12 - len(prefix)))
+
+    def utcToLocal(self, utc_datetime):
+        now_timestamp = time.time()
+        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        return utc_datetime + offset

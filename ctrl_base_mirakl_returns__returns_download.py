@@ -1,6 +1,8 @@
 from abc import ABC
 from YBLEGACY import qsatype
 
+from datetime import datetime, timedelta
+
 from controllers.base.default.controllers.download_sync import DownloadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 from controllers.base.mirakl.returns.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
@@ -96,7 +98,10 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def guarda_fechasincrotienda(self, esquema, codtienda):
         fecha = str(self.fecha_sincro)[:10]
-        hora = str(self.fecha_sincro)[11:19]
+        
+        fechaSeg = datetime.strptime(self.fecha_sincro, '%Y-%m-%dT%H:%M:%SZ')
+        fecha1Seg = fechaSeg + timedelta(seconds=1)
+        hora = str(fecha1Seg)[11:19]
 
         idsincro = qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "id", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
 
