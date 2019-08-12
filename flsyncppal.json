@@ -223,6 +223,14 @@
             {
                 "path": "controllers/base/mirakl/offers/controllers/",
                 "name": "ctrl_base_mirakl_offers__offers_upload.py"
+            },
+            {
+                "name": "ctrl_base_mirakl_returnsvaldemoro__ew_devolucioneseciweb_serializer.py",
+                "path": "controllers/base/mirakl/returnsvaldemoro/serializers/"
+            },
+            {
+                "name": "ctrl_base_mirakl_returnsvaldemoro__returnsvaldemoro_download.py",
+                "path": "controllers/base/mirakl/returnsvaldemoro/controllers/"
             }
         ]
     }

@@ -16,6 +16,6 @@ class DevolucioneseciwebSerializer(DefaultSerializer):
         self.set_string_value("fechaalta", now[:10])
         self.set_string_value("horaalta", now[-8:])
         self.set_string_relation("date_created", "date_created")
-        self.set_string_relation("valdemoro", False)
+        self.set_string_relation("valdemoro", True)
 
         return True

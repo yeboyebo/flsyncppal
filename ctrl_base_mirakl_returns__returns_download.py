@@ -1,5 +1,7 @@
 from abc import ABC
 from YBLEGACY import qsatype
+import json
+import xmltodict
 
 from datetime import datetime, timedelta
 
@@ -29,6 +31,16 @@ class ReturnsDownload(DownloadSync, ABC):
 
         if data["subject"] != "Devolución artículo":
             return False
+
+        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
+        tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
+
+        if tipoMsg != "001":
+            return True
+
+        dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
+        if dirRecogida.find("VALDEMORO") != -1:
+            return True
 
         fecha = data["date_created"]
         if self.fecha_sincro != "":
