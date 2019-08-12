@@ -1,4 +1,5 @@
 from YBLEGACY.constantes import *
+from YBLEGACY import qsatype
 
 from controllers.base.default.serializers.default_serializer import DefaultSerializer
 
@@ -6,6 +7,12 @@ from controllers.base.default.serializers.default_serializer import DefaultSeria
 class SimpleProductSerializer(DefaultSerializer):
 
     def get_data(self):
+
+        if self.get_init_value("store_id") != "ES" and self.get_init_value("store_id") != "all":
+            return self.get_serializador_store()
+        elif self.get_init_value("store_id") == "ES":
+            return self.get_serializador_store_es()
+
         self.set_string_relation("product//name", "lsc.descripcion")
         self.set_string_relation("product//weight", "a.peso")
         self.set_string_relation("product//price", "a.pvp")
@@ -66,3 +73,55 @@ class SimpleProductSerializer(DefaultSerializer):
             return 0
 
         return disponible
+
+    def get_serializador_store(self):
+        
+        self.set_string_value("product//sku", self.get_sku())
+
+        desc_store = qsatype.FLUtil.sqlSelect("traducciones", "traduccion", "campo = 'descripcion' AND codidioma = '" + self.get_init_value("store_id") + "' AND idcampo = '{}'".format(self.get_init_value("lsc.idobjeto")))
+
+        large_description_store =  qsatype.FLUtil.sqlSelect("traducciones", "traduccion", "campo = 'mgdescripcion' AND codidioma = '" + self.get_init_value("store_id") + "' AND idcampo = '{}'".format(self.get_init_value("lsc.idobjeto")))
+
+        if not desc_store or desc_store == "" or str(desc_store) == "None" or desc_store == None:
+            desc_store = self.get_init_value("a.mgdescripcioncorta")
+            if not desc_store or desc_store == "" or str(desc_store) == "None" or desc_store == None:
+                desc_store = self.get_init_value("lsc.descripcion")
+
+        if large_description_store == False or large_description_store == "" or large_description_store == None or str(large_description_store) == "None":
+            large_description_store = self.get_init_value("a.mgdescripcion")
+            if large_description_store == False or large_description_store == "" or large_description_store == None or str(large_description_store) == "None":
+                large_description_store = self.get_init_value("lsc.descripcion")
+
+        self.set_string_value("product//name", desc_store)
+
+        custom_attributes = [
+            {"attribute_code": "description", "value": large_description_store},
+            {"attribute_code": "short_description", "value": desc_store}
+        ]
+
+        self.set_data_value("product//custom_attributes", custom_attributes)
+
+        return True
+
+    def get_serializador_store_es(self):
+        
+        self.set_string_value("product//sku", self.get_sku())
+
+        desc_store = self.get_init_value("a.mgdescripcioncorta")
+        if not desc_store or desc_store == "" or str(desc_store) == "None" or desc_store == None:
+            desc_store = self.get_init_value("lsc.descripcion")
+
+        large_description_store = self.get_init_value("a.mgdescripcion")
+        if large_description_store == False or large_description_store == "" or large_description_store == None or str(large_description_store) == "None":
+            large_description_store = self.get_init_value("lsc.descripcion")
+
+        self.set_string_value("product//name", desc_store)
+
+        custom_attributes = [
+            {"attribute_code": "description", "value": large_description_store},
+            {"attribute_code": "short_description", "value": desc_store}
+        ]
+
+        self.set_data_value("product//custom_attributes", custom_attributes)
+
+        return True
