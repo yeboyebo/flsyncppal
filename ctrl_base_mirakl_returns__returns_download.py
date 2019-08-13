@@ -112,6 +112,9 @@ class ReturnsDownload(DownloadSync, ABC):
             self.log("Error", "Falló al guardar fecha última sincro")
             return self.small_sleep
 
+        if self.success_data:
+            self.log("Éxito", "Las siguientes devoluciones se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
+
         return self.large_sleep
 
     def guarda_fechasincrotienda(self, esquema, codtienda):
