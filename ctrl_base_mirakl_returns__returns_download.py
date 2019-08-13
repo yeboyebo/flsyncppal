@@ -25,34 +25,16 @@ class ReturnsDownload(DownloadSync, ABC):
         self.origin_field = "order_id"
 
     def process_data(self, data):
+        print("process_data")
         if not data:
             self.error_data.append(data)
             return False
-
-        if data["subject"] != "Devolución artículo":
-            return False
-
-        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
-        tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
-
-        if tipoMsg != "001":
-            return True
-
-        dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
-        if dirRecogida.find("VALDEMORO") != -1:
-            return True
-
-        fecha = data["date_created"]
-        if self.fecha_sincro != "":
-            if fecha > self.fecha_sincro:
-                self.fecha_sincro = fecha
-        else:
-            self.fecha_sincro = fecha
 
         data["valdemoro"] = False
         eciweb_data = DevolucioneseciwebSerializer().serialize(data)
         if not eciweb_data:
             self.error_data.append(data)
+            print("sale 4")
             return False
 
         if qsatype.FLUtil.sqlSelect("ew_devolucioneseciweb", "idventaweb", "idventaweb = '{}'".format(eciweb_data["idventaweb"])):
@@ -68,12 +50,14 @@ class ReturnsDownload(DownloadSync, ABC):
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
+        print("fin True")
         return True
 
     def masAccionesProcessData(self, eciweb_data):
         return True
 
     def get_data(self):
+        print("get_data")
         returns_url = self.returns_url if self.driver.in_production else self.returns_test_url
 
         fecha = self.dame_fechasincrotienda(self.esquema, self.codtienda)
@@ -84,20 +68,50 @@ class ReturnsDownload(DownloadSync, ABC):
 
         # Tmp. Para pruebas. Quitar en producción
         #self.fecha_sincro = "2000-01-01T00:00:01Z"
+        print(returns_url.format(self.fecha_sincro))
         result = self.send_request("get", url=returns_url.format(self.fecha_sincro))
+        print(result)
         return result
 
     def process_all_data(self, all_data):
+        print("process_all_data")
         if all_data["messages"] == []:
             self.log("Éxito", "No hay datos que sincronizar")
             return False
 
+        processData = False
         for data in all_data["messages"]:
             try:
+                datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
+                tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
+
+                fecha = data["date_created"]
+                if self.fecha_sincro != "":
+                    if fecha > self.fecha_sincro:
+                        self.fecha_sincro = fecha
+                else:
+                    self.fecha_sincro = fecha
+
+                if data["subject"] != "Devolución artículo":
+                    continue
+
+                if tipoMsg != "001":
+                    continue
+
+                dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
+                if dirRecogida.find("VALDEMORO") != -1:
+                    print("continue dir")
+                    continue
+
+                processData = True
                 if self.process_data(data):
                     self.success_data.append(data)
             except Exception as e:
                 self.sync_error(data, e)
+
+        if processData == False:
+            self.log("Éxito", "No hay datos que sincronizar")
+            return False
 
         return True
 
@@ -126,3 +140,4 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def dame_fechasincrotienda(self, esquema, codtienda):
         return qsatype.FLUtil.sqlSelect("tpv_fechasincrotienda", "fechasincro || 'T' || horasincro || 'Z'", "esquema = '{}' AND codtienda = '{}'".format(esquema, codtienda))
+

@@ -20,26 +20,6 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
             self.error_data.append(data)
             return False
 
-        if data["subject"] != "Devolución artículo":
-            return False
-
-        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
-        tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
-
-        if tipoMsg != "001":
-            return True
-
-        dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
-        if dirRecogida.find("VALDEMORO") == -1:
-            return True
-
-        fecha = data["date_created"]
-        if self.fecha_sincro != "":
-            if fecha > self.fecha_sincro:
-                self.fecha_sincro = fecha
-        else:
-            self.fecha_sincro = fecha
-
         data["valdemoro"] = True
         eciweb_data = DevolucioneseciwebSerializer().serialize(data)
         if not eciweb_data:
@@ -58,5 +38,46 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
         eciweb_data["datosdevol"] = data["body"]
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
+
+        return True
+
+    def process_all_data(self, all_data):
+        print("process_all_data")
+        if all_data["messages"] == []:
+            self.log("Éxito", "No hay datos que sincronizar")
+            return False
+
+        processData = False
+        for data in all_data["messages"]:
+            try:
+            	fecha = data["date_created"]
+		        if self.fecha_sincro != "":
+		            if fecha > self.fecha_sincro:
+		                self.fecha_sincro = fecha
+		        else:
+		            self.fecha_sincro = fecha
+
+                if data["subject"] != "Devolución artículo":
+		            continue
+
+		        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
+		        tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
+
+		        if tipoMsg != "001":
+		            continue
+
+		        dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
+		        if dirRecogida.find("VALDEMORO") == -1:
+		            continue
+
+                processData = True
+                if self.process_data(data):
+                    self.success_data.append(data)
+            except Exception as e:
+                self.sync_error(data, e)
+
+        if processData == False:
+            self.log("Éxito", "No hay datos que sincronizar")
+            return False
 
         return True
