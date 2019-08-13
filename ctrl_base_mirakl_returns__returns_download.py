@@ -25,7 +25,6 @@ class ReturnsDownload(DownloadSync, ABC):
         self.origin_field = "order_id"
 
     def process_data(self, data):
-        print("process_data")
         if not data:
             self.error_data.append(data)
             return False
@@ -34,7 +33,6 @@ class ReturnsDownload(DownloadSync, ABC):
         eciweb_data = DevolucioneseciwebSerializer().serialize(data)
         if not eciweb_data:
             self.error_data.append(data)
-            print("sale 4")
             return False
 
         if qsatype.FLUtil.sqlSelect("ew_devolucioneseciweb", "idventaweb", "idventaweb = '{}'".format(eciweb_data["idventaweb"])):
@@ -50,14 +48,12 @@ class ReturnsDownload(DownloadSync, ABC):
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
-        print("fin True")
         return True
 
     def masAccionesProcessData(self, eciweb_data):
         return True
 
     def get_data(self):
-        print("get_data")
         returns_url = self.returns_url if self.driver.in_production else self.returns_test_url
 
         fecha = self.dame_fechasincrotienda(self.esquema, self.codtienda)
@@ -68,13 +64,10 @@ class ReturnsDownload(DownloadSync, ABC):
 
         # Tmp. Para pruebas. Quitar en producción
         #self.fecha_sincro = "2000-01-01T00:00:01Z"
-        print(returns_url.format(self.fecha_sincro))
         result = self.send_request("get", url=returns_url.format(self.fecha_sincro))
-        print(result)
         return result
 
     def process_all_data(self, all_data):
-        print("process_all_data")
         if all_data["messages"] == []:
             self.log("Éxito", "No hay datos que sincronizar")
             return False
@@ -100,7 +93,6 @@ class ReturnsDownload(DownloadSync, ABC):
 
                 dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
                 if dirRecogida.find("VALDEMORO") != -1:
-                    print("continue dir")
                     continue
 
                 processData = True
