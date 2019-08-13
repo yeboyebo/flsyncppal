@@ -17,7 +17,6 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
     esquema = "DEVOLSVAL_ECI_WEB"
 
     def process_data(self, data):
-        print("process_data")
         if not data:
             self.error_data.append(data)
             return False
@@ -25,7 +24,7 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
         if data["subject"] != "Devolución artículo":
             return False
 
-       datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
+        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
         tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
 
         if tipoMsg != "001":
