@@ -5,7 +5,6 @@ import xmltodict
 
 from datetime import datetime, timedelta
 
-
 # from controllers.base.default.controllers.download_sync import DownloadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
 from controllers.base.mirakl.returns.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
@@ -60,28 +59,4 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
         devoleciweb = EwDevolucioneseciweb(eciweb_data)
         devoleciweb.save()
 
-        return True
-
-    def process_all_data(self, all_data):
-        print("process_all_data base ")
-        data = {
-            "archived": False,
-            "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Mensaje><tipoMensaje>010</tipoMensaje><Devolucion><EAN>008433614152155</EAN><lineaPedido>20190804141302-UATG32727563-A-2</lineaPedido><unidades>0001</unidades></Devolucion><Recogida><codigoRecogida>0365272220190807</codigoRecogida><direccionRecogida>CTRA/ANDALUCIA KM 23,5S/N,(ATT.DVD). CP: 28343. VALDEMORO</direccionRecogida></Recogida><texto>Le informamos que se ha iniciado un proceso de devolución con abono al cliente mediante TPV en Centro Comercial.</texto></Mensaje>",
-            "commercial_id": "20190804141302-UATG32727563",
-            "date_created": "2019-08-07T14:01:59Z",
-            "from_id": "1",
-            "from_name": "Operator",
-            "from_type": "OPERATOR",
-            "id": 1245035,
-            "order_id": "20190804141302-UATG32727563-A",
-            "read": False,
-            "subject": "Devolución artículo",
-            "to_shop_archived": False,
-            "to_shop_id": 2449,
-            "to_shop_name": "EL GANSO"
-        }
-        print("process all data")
-        if self.process_data(data):
-            self.success_data.append(data)
-        print("fin process all data")
         return True

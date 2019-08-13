@@ -85,7 +85,6 @@ class ReturnsDownload(DownloadSync, ABC):
         # Tmp. Para pruebas. Quitar en producción
         #self.fecha_sincro = "2000-01-01T00:00:01Z"
         result = self.send_request("get", url=returns_url.format(self.fecha_sincro))
-
         return result
 
     def process_all_data(self, all_data):
@@ -111,7 +110,7 @@ class ReturnsDownload(DownloadSync, ABC):
 
     def guarda_fechasincrotienda(self, esquema, codtienda):
         fecha = str(self.fecha_sincro)[:10]
-        
+
         fechaSeg = datetime.strptime(self.fecha_sincro, '%Y-%m-%dT%H:%M:%SZ')
         fecha1Seg = fechaSeg + timedelta(seconds=1)
         hora = str(fecha1Seg)[11:19]
