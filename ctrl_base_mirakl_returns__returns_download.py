@@ -49,6 +49,7 @@ class ReturnsDownload(DownloadSync, ABC):
         else:
             self.fecha_sincro = fecha
 
+        data["valdemoro"] = False
         eciweb_data = DevolucioneseciwebSerializer().serialize(data)
         if not eciweb_data:
             self.error_data.append(data)

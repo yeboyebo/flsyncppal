@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 # from controllers.base.default.controllers.download_sync import DownloadSync
 from controllers.base.mirakl.drivers.mirakl import MiraklDriver
-from controllers.base.mirakl.returnsvaldemoro.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
+from controllers.base.mirakl.returns.serializers.ew_devolucioneseciweb_serializer import DevolucioneseciwebSerializer
 from controllers.base.mirakl.returns.controllers.returns_download import ReturnsDownload
 from models.flfact_tpv.objects.ew_devolucioneseciweb_raw import EwDevolucioneseciweb
 
@@ -41,6 +41,7 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
         else:
             self.fecha_sincro = fecha
 
+        data["valdemoro"] = True
         eciweb_data = DevolucioneseciwebSerializer().serialize(data)
         if not eciweb_data:
             self.error_data.append(data)
