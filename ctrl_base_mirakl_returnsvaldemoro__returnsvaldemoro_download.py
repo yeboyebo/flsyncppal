@@ -49,25 +49,25 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
         processData = False
         for data in all_data["messages"]:
             try:
-            	fecha = data["date_created"]
-		        if self.fecha_sincro != "":
-		            if fecha > self.fecha_sincro:
-		                self.fecha_sincro = fecha
-		        else:
-		            self.fecha_sincro = fecha
+                fecha = data["date_created"]
+                if self.fecha_sincro != "":
+                    if fecha > self.fecha_sincro:
+                        self.fecha_sincro = fecha
+                else:
+                    self.fecha_sincro = fecha
 
                 if data["subject"] != "Devolución artículo":
-		            continue
+                    continue
 
-		        datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
-		        tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
+                datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
+                tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
 
-		        if tipoMsg != "001":
-		            continue
+                if tipoMsg != "001":
+                    continue
 
-		        dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
-		        if dirRecogida.find("VALDEMORO") == -1:
-		            continue
+                dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
+                if dirRecogida.find("VALDEMORO") == -1:
+                    continue
 
                 processData = True
                 if self.process_data(data):
