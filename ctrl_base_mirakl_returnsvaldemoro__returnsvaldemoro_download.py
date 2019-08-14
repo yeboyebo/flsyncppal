@@ -66,7 +66,8 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
                     continue
 
                 dirRecogida = datosDevol["Mensaje"]["Recogida"]["direccionRecogida"]
-                if dirRecogida.find("VALDEMORO") == -1:
+                # if dirRecogida.find("VALDEMORO") == -1:
+                if dirRecogida != "CTRA/ANDALUCIA KM 23,5S/N,(ATT.DVD). CP: 28343. VALDEMORO":
                     continue
 
                 processData = True
