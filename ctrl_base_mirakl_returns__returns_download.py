@@ -75,6 +75,9 @@ class ReturnsDownload(DownloadSync, ABC):
         processData = False
         for data in all_data["messages"]:
             try:
+                if data["body"].startswith("<?xml"):
+                    continue
+
                 datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
                 tipoMsg = datosDevol["Mensaje"]["tipoMensaje"]
 
