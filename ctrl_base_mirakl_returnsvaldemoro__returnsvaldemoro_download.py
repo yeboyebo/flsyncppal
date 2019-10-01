@@ -59,7 +59,7 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
                 if data["subject"] != "Devolución artículo":
                     continue
 
-                if data["body"].startswith("<?xml"):
+                if not data["body"].startswith("<?xml"):
                     continue
 
                 datosDevol = json.loads(json.dumps(xmltodict.parse(data["body"])))
