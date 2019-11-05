@@ -231,6 +231,10 @@
             {
                 "name": "ctrl_base_mirakl_returnsvaldemoro__returnsvaldemoro_download.py",
                 "path": "controllers/base/mirakl/returnsvaldemoro/controllers/"
+            },
+            {
+                "path": "controllers/base/mirakl/offersdate/controllers/",
+                "name": "ctrl_base_mirakl_offersdate__offersdate_upload.py"
             }
         ]
     }
