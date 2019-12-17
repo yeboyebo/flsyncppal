@@ -79,7 +79,7 @@ class ShippingOrdersDownload(OrdersDownload, ABC):
         q = qsatype.FLSqlQuery()
         q.setSelect("idweb")
         q.setFrom("ew_ventaseciweb")
-        q.setWhere("estado = 'WAITING_DEBIT'")
+        q.setWhere("estado = 'WAITING_DEBIT' ORDER BY RANDOM() LIMIT 90")
 
         q.exec_()
 
