@@ -17,6 +17,8 @@ import json
 
 class flsyncppal(interna):
 
+    cached_params = {}
+
     def flsyncppal_get_customer(self):
         return "flsyncppal"
 
@@ -58,6 +60,9 @@ class flsyncppal(interna):
         return string[:255]
 
     def flsyncppal_get_param_sincro(self, param):
+        if param in self.cached_params:
+            return self.cached_params[param]
+
         q = qsatype.FLSqlQuery()
         q.setSelect("tipo, valor, valortest")
         q.setFrom("ws_params")
@@ -68,6 +73,9 @@ class flsyncppal(interna):
         while q.next():
             params[q.value('tipo')] = q.value('valor')
             params['test_{}'.format(q.value('tipo'))] = q.value('valortest')
+
+        self.cached_params[param] = params
+
         return params
 
     def __init__(self, context=None):
