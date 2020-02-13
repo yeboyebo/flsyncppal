@@ -3,6 +3,7 @@ import json
 from abc import ABC
 
 from YBLEGACY import qsatype
+from models.flsyncppal import flsyncppal_def as syncppal
 
 from controllers.base.magento2.drivers.magento2 import Magento2Driver
 from controllers.base.default.controllers.upload_sync import UploadSync
@@ -124,7 +125,7 @@ class CustomerUpload(UploadSync, ABC):
         headers = {"Content-Type": "application/json"}
 
         data = {
-            "customer_name": "elganso",
+            "customer_name": syncppal.iface.get_customer(),
             "referencia": self.codcliente,
             "process_name": "mgb2bcustomers",
             "error": str(exc),

@@ -46,10 +46,7 @@ class OrdersDownload(DownloadSync, ABC):
         return True
 
     def after_sync(self):
-        self.set_sync_params({
-            "url": "http://b2b.elganso.com/index.php/rest/default/V1/orders/{}/synchronized",
-            "test_url": "http://magento2.local/index.php/rest/default/V1/orders/{}/synchronized"
-        })
+        self.set_sync_params(self.get_param_sincro('b2bOrdersDownloadSync'))
 
         success_records = []
         error_records = []
