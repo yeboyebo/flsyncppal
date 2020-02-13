@@ -40,8 +40,9 @@ class flsyncppal(interna):
             print("Error. No se pudo escribir en el log")
             return False
 
-    def get_diagnosis_url(self):
-        return "https://diagnosis.yeboyebo.es" if qsatype.FLUtil.isInProd() else "http://127.0.0.1:9000"
+    def flsyncppal_get_diagnosis_url(self):
+        param = self.get_param_sincro('diagnosis')
+        return param['url'] if qsatype.FLUtil.isInProd() else param['test_url']
 
     def flsyncppal_replace(self, string):
         if string is None or not string or string == "":
@@ -56,6 +57,19 @@ class flsyncppal(interna):
         string = string.replace("\t", " ")
         return string[:255]
 
+    def flsyncppal_get_param_sincro(self, param):
+        q = qsatype.FLSqlQuery()
+        q.setSelect("tipo, valor, valortest")
+        q.setFrom("ws_params")
+        q.setWhere("clave = '{}'".format(param))
+        q.exec_()
+
+        params = {}
+        while q.next():
+            params[q.value('tipo')] = q.value('valor')
+            params['test_{}'.format(q.value('tipo'))] = q.value('valortest')
+        return params
+
     def __init__(self, context=None):
         super().__init__(context)
 
@@ -67,6 +81,12 @@ class flsyncppal(interna):
 
     def replace(self, string):
         return self.ctx.flsyncppal_replace(string)
+
+    def get_diagnosis_url(self):
+        return self.ctx.flsyncppal_get_diagnosis_url()
+
+    def get_param_sincro(self, param):
+        return self.ctx.flsyncppal_get_param_sincro(param)
 
 
 # @class_declaration head #

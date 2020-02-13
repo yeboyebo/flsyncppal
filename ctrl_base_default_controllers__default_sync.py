@@ -62,3 +62,6 @@ class DefaultSync(ABC):
             string = string.replace("\t", " ")
 
         return string[:max_characters]
+
+    def get_param_sincro(self, param):
+        return syncppal.iface.get_param_sincro(param)

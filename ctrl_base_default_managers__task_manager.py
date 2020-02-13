@@ -86,10 +86,12 @@ class TaskManager():
         if "url_diagnosis" in params and params["url_diagnosis"]:
             return params["url_diagnosis"]
 
-        if "production" in params and params["production"]:
-            return "https://diagnosis.yeboyebo.es"
+        param = syncppal.iface.get_param_sincro('diagnosis')
 
-        return "http://127.0.0.1:9000"
+        if "production" in params and params["production"]:
+            return param['url']
+
+        return param['test_url']
 
     def log(self, logs, params={}, retry=False):
         headers = {"Content-Type": "application/json"}
