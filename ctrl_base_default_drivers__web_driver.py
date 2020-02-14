@@ -56,7 +56,7 @@ class WebDriver(DefaultDriver, ABC):
         return url
 
     def proccess_response(self, response, success_code):
-        if response.status_code == success_code:
+        if response.status_code == int(success_code):
             try:
                 return response.json()
             except Exception as e:
