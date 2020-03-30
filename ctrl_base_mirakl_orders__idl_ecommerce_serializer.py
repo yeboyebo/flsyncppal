@@ -8,8 +8,8 @@ class IdlEcommerceSerializer(DefaultSerializer):
     def get_data(self):
         self.set_string_relation("codcomanda", "codcomanda", max_characters=15)
         self.set_string_value("tipo", "VENTA")
-        self.set_string_value("transportista", "SEUR")
-        self.set_string_value("metodoenvioidl", "B2C/STD", skip_replace=True)
+        self.set_string_value("transportista", "MRW")
+        self.set_string_value("metodoenvioidl", "3Urgente 19 Expedición", skip_replace=True)
         self.set_data_value("imprimiralbaran", False)
         self.set_data_value("imprimirfactura", False)
         self.set_data_value("imprimirdedicatoria", False)
