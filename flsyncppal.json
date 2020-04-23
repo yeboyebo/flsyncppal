@@ -235,6 +235,10 @@
             {
                 "path": "controllers/base/mirakl/offersdate/controllers/",
                 "name": "ctrl_base_mirakl_offersdate__offersdate_upload.py"
+            },
+            {
+                "name": "model_flfact_tpv__ordersb2b_raw.py",
+                "path": "models/flfact_tpv/objects/"
             }
         ]
     }
