@@ -59,8 +59,11 @@ class WebDriver(DefaultDriver, ABC):
         if response.status_code == int(success_code):
             try:
                 return response.json()
-            except Exception as e:
-                raise NameError("Mala respuesta del servidor. {}".format(e))
+            except Exception:
+                try:
+                    return response.text
+                except Exception as e:
+                    raise NameError("Mala respuesta del servidor. {}".format(e))
         else:
             error_text = ""
             if "reason" in response and response["reason"] != "":
