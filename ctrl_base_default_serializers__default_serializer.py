@@ -1,4 +1,5 @@
 from abc import ABC
+from collections import OrderedDict
 
 
 class DefaultSerializer(ABC):
@@ -8,9 +9,9 @@ class DefaultSerializer(ABC):
 
     def serialize(self, init_data):
         self.init_data = init_data
-        self.data = {
-            "children": {}
-        }
+        self.data = OrderedDict({
+            "children": OrderedDict({})
+        })
         if not self.get_data():
             return False
 
@@ -33,7 +34,7 @@ class DefaultSerializer(ABC):
         data_keys = data_key.split("//")
         for key in data_keys[:-1]:
             if key not in new_dict:
-                new_dict[key] = {}
+                new_dict[key] = OrderedDict({})
             new_dict = new_dict[key]
 
         new_dict[data_keys[-1]] = value
