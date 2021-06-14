@@ -13,7 +13,7 @@ class UploadSync(ConnectSync, ABC):
         data = self.get_data()
 
         if data == []:
-            self.log("Éxito", "No hay datos que sincronizar")
+            self.log("Exito", "No hay datos que sincronizar")
             return self.large_sleep
 
         response_data = self.send_data(data)

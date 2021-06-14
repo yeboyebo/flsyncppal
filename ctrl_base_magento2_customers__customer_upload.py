@@ -106,7 +106,7 @@ class CustomerUpload(UploadSync, ABC):
         qsatype.FLSqlQuery().execSql("UPDATE lineassincro_catalogo SET sincronizado = TRUE WHERE id = {}".format(self.idlinea))
         qsatype.FLSqlQuery().execSql("UPDATE clientesb2b SET idclientemagento = '" + str(self.idclientemagento) + "' WHERE codcliente = '" + str(self.codcliente) + "'")
 
-        self.log("Éxito", "Cliente sincronizado correctamente: {}".format(self.codcliente))
+        self.log("Exito", "Cliente sincronizado correctamente: {}".format(self.codcliente))
 
         return self.small_sleep
 

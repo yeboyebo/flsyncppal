@@ -33,7 +33,7 @@ class OrdersDownload(DownloadSync, ABC):
 
     def process_all_data(self, all_data):
         if all_data == []:
-            self.log("Éxito", "No hay datos que sincronizar")
+            self.log("Exito", "No hay datos que sincronizar")
             return False
 
         for data in all_data:
@@ -65,7 +65,7 @@ class OrdersDownload(DownloadSync, ABC):
                 after_sync_error_records.append(order["increment_id"])
 
         if success_records:
-            self.log("Éxito", "Los siguientes pedidos B2B se han sincronizado correctamente: {}".format(success_records))
+            self.log("Exito", "Los siguientes pedidos B2B se han sincronizado correctamente: {}".format(success_records))
 
         if error_records:
             self.log("Error", "Los siguientes pedidos B2B no se han sincronizado correctamente: {}".format(error_records))

@@ -57,7 +57,7 @@ class OrdersDownload(DownloadSync, ABC):
 
     def process_all_data(self, all_data):
         if all_data["orders"] == []:
-            self.log("Éxito", "No hay datos que sincronizar")
+            self.log("Exito", "No hay datos que sincronizar")
             return False
 
         for data in all_data["orders"]:
@@ -75,7 +75,7 @@ class OrdersDownload(DownloadSync, ABC):
             return self.small_sleep
 
         if self.success_data:
-            self.log("Éxito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
+            self.log("Exito", "Los siguientes pedidos se han sincronizado correctamente: {}".format([order["order_id"] for order in self.success_data]))
 
         return self.large_sleep
 

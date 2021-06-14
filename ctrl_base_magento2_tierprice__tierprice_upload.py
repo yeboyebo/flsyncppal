@@ -84,6 +84,6 @@ class TierpriceUpload(UploadSync, ABC):
         if not lineas_no_sincro:
             qsatype.FLSqlQuery().execSql("UPDATE sincro_catalogo SET ptesincro = FALSE WHERE idsincro = '{}'".format(self.idsincro))
 
-        self.log("Éxito", "Tarifas sincronizadas correctamente (tarifa - referencia: {})".format(self.referencia))
+        self.log("Exito", "Tarifas sincronizadas correctamente (tarifa - referencia: {})".format(self.referencia))
 
         return self.small_sleep

@@ -43,7 +43,7 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
 
     def process_all_data(self, all_data):
         if all_data["messages"] == []:
-            self.log("Éxito", "No hay datos que sincronizar")
+            self.log("Exito", "No hay datos que sincronizar")
             return False
 
         processData = False
@@ -80,7 +80,7 @@ class ReturnsValdemoroDownload(ReturnsDownload, ABC):
                 self.sync_error(data, e)
 
         if processData == False:
-            self.log("Éxito", "No hay datos que sincronizar")
+            self.log("Exito", "No hay datos que sincronizar")
             return False
 
         return True

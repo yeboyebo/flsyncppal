@@ -21,7 +21,7 @@ class ConnectSync(DefaultSync, ABC):
     def sync_flow(self):
         try:
             if not self.before_sync():
-                self.log("Éxito", "No es momento de sincronizar")
+                self.log("Exito", "No es momento de sincronizar")
                 return {"countdown": self.no_sync_sleep, "data": {"log": self.logs}, "status": 200}
 
             self.driver.in_production = self.params["production"] if "production" in self.params else False

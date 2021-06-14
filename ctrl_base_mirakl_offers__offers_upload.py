@@ -80,7 +80,7 @@ class OffersUpload(UploadSync, ABC):
         if response_data and "import_id" in response_data:
             qsatype.FLSqlQuery().execSql("UPDATE eg_sincrostockweb SET sincronizadoeci = TRUE WHERE idssw IN ({})".format(self._ssw))
 
-            self.log("Éxito", "Stock sincronizado correctamente: {}".format(response_data["import_id"]))
+            self.log("Exito", "Stock sincronizado correctamente: {}".format(response_data["import_id"]))
         else:
             self.log("Error", "No hubo una respuesta correcta del servidor")
 

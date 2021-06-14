@@ -81,6 +81,6 @@ class InventoryUpload(UploadSync, ABC):
 
         qsatype.FLSqlQuery().execSql("UPDATE lineassincro_catalogo SET sincronizado = TRUE WHERE idobjeto = CAST({} as VARCHAR)".format(self.idlinea))
 
-        self.log("Éxito", "Stock sincronizado correctamente (referencia: {})".format(self.referencia))
+        self.log("Exito", "Stock sincronizado correctamente (referencia: {})".format(self.referencia))
 
         return self.small_sleep
