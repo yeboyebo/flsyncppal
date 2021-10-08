@@ -57,13 +57,13 @@ class DownloadSync(ConnectSync, ABC):
     def sync_error(self, data, exc):
         self.error_data.append(data)
 
-        self.log("Error", "Ocurrió un error al sincronizar el registro {}. {}".format(data[self.origin_field], exc))
+        self.log("Error", "Ocurrio un error al sincronizar el registro {}. {}".format(data[self.origin_field], exc))
 
         if self.params["continuous"]:
             self.add_failed_process(data, exc)
 
     def after_sync_error(self, data, exc):
-        self.log("Error", "Ocurrió un error al marcar como sincronizado el registro {}. {}".format(data[self.origin_field], exc))
+        self.log("Error", "Ocurrio un error al marcar como sincronizado el registro {}. {}".format(data[self.origin_field], exc))
 
     def add_failed_process(self, data, exc):
         headers = {"Content-Type": "application/json"}
@@ -79,7 +79,7 @@ class DownloadSync(ConnectSync, ABC):
         try:
             response = requests.post(url, headers=headers, data=json.dumps(data))
             if response.status_code != 200:
-                raise NameError("Error. No se pudo incluir el registro {} en procesos erróneos. Código {}".format(data["pk"], response.status_code))
+                raise NameError("Error. No se pudo incluir el registro {} en procesos erroneos. Código {}".format(data["pk"], response.status_code))
         except Exception as e:
-            self.log("Error", "No se pudo incluir el registro {} en procesos erróneos. {}".format(data["pk"], e))
+            self.log("Error", "No se pudo incluir el registro {} en procesos erroneos. {}".format(data["pk"], e))
             return False
