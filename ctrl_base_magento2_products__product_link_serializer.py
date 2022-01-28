@@ -12,7 +12,7 @@ class ProductLinkSerializer(DefaultSerializer):
         return True
 
     def get_sku(self):
-        referencia = self.get_init_value("lsc.idobjeto")
+        referencia = self.get_init_value("aa.referencia")
         talla = self.get_init_value("aa.talla")
 
         if talla == "TU":
