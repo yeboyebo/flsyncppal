@@ -34,7 +34,7 @@ class OffersUpload(UploadSync, ABC):
         return file
 
     def get_db_data(self):
-        body = []
+        ''' body = []
 
         disponible_restar = self.get_disponible_a_restar()
 
@@ -59,7 +59,36 @@ class OffersUpload(UploadSync, ABC):
             if disponible < 0:
                 disponible = 0
 
-            body.append([q.value("s.barcode"), disponible])
+            body.append([q.value("s.barcode"), disponible])''' 
+            
+        # Esto es lo nuevo para subir el stock
+        
+        body = []
+        
+        q = qsatype.FLSqlQuery()
+        q.setSelect("ssw.idss, ssw.barcode")
+        q.setFrom("eg_sincrostockwebcanalweb ssw")
+        q.setWhere("ssw.sincronizadoeci IS NULL OR ssw.sincronizadoeci = false LIMIT 100")
+        q.exec_()
+        
+        aAlmacenes = qsatype.FLUtil.sqlSelect("param_parametros", "valor", "nombre = 'ALMACENES_SINCRO_MK'")
+        aAlmacenes = aAlmacenes.split(",")
+        almacenes = "'" + "', '".join(aAlmacenes) + "'"
+        
+        print(str(almacenes))
+
+        if q.size():
+            while q.next():
+                if not self._ssw:
+                    self._ssw = ""
+                else:
+                    self._ssw += ","
+                self._ssw += str(q.value("ssw.idss"))
+
+                cant_disponible = qsatype.FLUtil.sqlSelect("stocks s LEFT JOIN param_parametros p ON 'RSTOCKMK_' || s.codalmacen = p.nombre", "COALESCE(SUM(CASE WHEN (s.disponible-COALESCE(CAST(p.valor as integer),0)) > 0 THEN (s.disponible-COALESCE(CAST(p.valor as integer),0)) ELSE 0 END), 0)", "s.barcode = '" + str(q.value("ssw.barcode")) + "' and s.codalmacen IN (" + almacenes + ")")
+
+                body.append([q.value("ssw.barcode"), cant_disponible])
+            print(str(body))
 
         return body
 
@@ -78,10 +107,12 @@ class OffersUpload(UploadSync, ABC):
 
     def after_sync(self, response_data=None):
         if response_data and "import_id" in response_data:
-            qsatype.FLSqlQuery().execSql("UPDATE eg_sincrostockweb SET sincronizadoeci = TRUE WHERE idssw IN ({})".format(self._ssw))
+            # qsatype.FLSqlQuery().execSql("UPDATE eg_sincrostockweb SET sincronizadoeci = TRUE WHERE idssw IN ({})".format(self._ssw))
+            qsatype.FLSqlQuery().execSql("UPDATE eg_sincrostockwebcanalweb SET sincronizadoeci = TRUE WHERE idss IN ({})".format(self._ssw))
 
             self.log("Exito", "Stock sincronizado correctamente: {}".format(response_data["import_id"]))
         else:
             self.log("Error", "No hubo una respuesta correcta del servidor")
 
         return self.small_sleep
+
