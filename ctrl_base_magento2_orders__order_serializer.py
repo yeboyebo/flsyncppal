@@ -16,10 +16,12 @@ class OrderSerializer(DefaultSerializer):
 
         codigo_cliente = qsatype.FLUtil.quickSqlSelect("clientes", "codcliente", "cifnif = '{}'".format(cif_nif))
         if not codigo_cliente or codigo_cliente == "":
+            raise NameError("No se ha encontrado el cliente")
             return False
 
         codigo_serie = self.get_codserie(codigo_cliente)
         if not codigo_serie:
+            raise NameError("No se ha podido obtener el codigo de la serie.")
             return False
 
         codigo_ejercicio = self.get_codejercicio()
