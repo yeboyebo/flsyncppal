@@ -19,7 +19,7 @@ class CustomerSerializer(DefaultSerializer):
         self.set_string_relation("customer//taxvat", "c.cifnif")
         self.set_string_relation("customer//store_id", "b2b.idstore")
         self.set_string_relation("customer//group_id", "gcb2b.idgrupoclienteb2b")
-        self.set_data_value("customer//website_id", 0)
+        self.set_data_value("customer//website_id", 1)
 
         nombre_comercial = ""
         if str(self.get_init_value("c.nombrecomercial")) != "None" and str(self.get_init_value("c.nombrecomercial")) != "":
