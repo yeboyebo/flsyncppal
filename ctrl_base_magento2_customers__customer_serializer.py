@@ -32,7 +32,7 @@ class CustomerSerializer(DefaultSerializer):
             "firstname": nombre_cliente,
             "lastname": apellido_cliente,
             "region": {
-                "region": self.get_init_value("dc.provincia")
+                "region": self.get_init_value("dc.provincia"),
                 "region_id": self.get_init_value("p.mg_idprovincia")
             },
             "countryId": self.get_init_value("dc.codpais"),
