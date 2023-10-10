@@ -6,8 +6,7 @@ class CustomerSerializer(DefaultSerializer):
     def get_data(self):
 
         if str(self.get_init_value("b2b.idclientemagento")) != "" and str(self.get_init_value("b2b.idclientemagento")) != "None":
-            self.serializador_actualizar_cliente()
-            return True
+            self.set_string_value("customer//id", self.get_init_value("b2b.idclientemagento"))
 
         nombre_cliente_completo = self.get_nombre_cliente()
         nombre_cliente = nombre_cliente_completo[0]
